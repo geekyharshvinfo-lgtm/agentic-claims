@@ -37,10 +37,10 @@ export default function AdjusterWorkspace() {
   };
 
   const handleConfirmSettlement = () => {
-    // Update claim status to "Settled"
+    // Update claim status to "Closed"
     const claimIndex = sampleClaims.findIndex(c => c.id === claimId);
     if (claimIndex !== -1) {
-      sampleClaims[claimIndex].status = 'Settled';
+      sampleClaims[claimIndex].status = 'Closed';
     }
 
     // Close modal and show success toast
