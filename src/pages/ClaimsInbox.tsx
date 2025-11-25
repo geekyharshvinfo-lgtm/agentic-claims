@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FileText, Clock, AlertCircle, Home } from 'lucide-react';
 import { sampleClaims } from '../data/sampleClaims';
-import { ClaimStatus, SLARisk, Claim } from '../types';
+import { ClaimStatus, SLARisk } from '../types';
 import { cn } from '../utils/cn';
 import BulkActionBar from '../components/bulk/BulkActionBar';
 import BulkConfirmModal from '../components/bulk/BulkConfirmModal';

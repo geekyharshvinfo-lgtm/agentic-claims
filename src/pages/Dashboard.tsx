@@ -6,8 +6,7 @@ import {
   Archive,
   AlertTriangle,
   TrendingUp,
-  Clock,
-  DollarSign
+  Clock
 } from 'lucide-react';
 import { sampleClaims } from '../data/sampleClaims';
 import { calculateDashboardStats } from '../utils/dashboardStats';

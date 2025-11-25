@@ -1,4 +1,4 @@
-import { CheckCircle, UserPlus, Tag, Download, X } from 'lucide-react';
+import { CheckCircle, UserPlus, Download, X } from 'lucide-react';
 
 interface BulkActionBarProps {
   selectedCount: number;
