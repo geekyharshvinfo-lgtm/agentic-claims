@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileText } from 'lucide-react';
 import { sampleClaims, sampleDocuments } from '@/data/sampleClaims';
+import { claimDataMap } from '@/data/claimSpecificData';
 import { useAgentSimulation } from '@/hooks/useAgentSimulation';
 import ColumnA from '@/components/layout/ColumnA_ClaimInfo';
 import ColumnB from '@/components/layout/ColumnB_Investigation';
@@ -10,11 +11,14 @@ import ColumnC from '@/components/layout/ColumnC_AgenticPanel';
 export default function AdjusterWorkspace() {
   const { claimId } = useParams();
   const navigate = useNavigate();
-  const [payout, setPayout] = useState(42200);
+  
+  const claim = sampleClaims.find(c => c.id === claimId);
+  const claimData = claimDataMap[claimId || ''] || claimDataMap['AC-2025-00124'];
+  
+  const [payout, setPayout] = useState(claimData.payout.amount);
   const [notes, setNotes] = useState('');
   const [showToast, setShowToast] = useState(false);
 
-  const claim = sampleClaims.find(c => c.id === claimId);
   const { agents, isRunning, isComplete } = useAgentSimulation(true);
 
   if (!claim) {
@@ -73,6 +77,8 @@ export default function AdjusterWorkspace() {
           setNotes={setNotes}
           onApprove={handleApprove}
           agents={agents}
+          isComplete={isComplete}
+          claimData={claimData}
         />
 
         {/* Column C: Agentic Activity Panel */}

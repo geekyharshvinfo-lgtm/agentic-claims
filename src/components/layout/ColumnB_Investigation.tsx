@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, Clock } from 'lucide-react';
 import { Document, AgentOutput } from '@/types';
+import { ClaimSpecificData } from '@/data/claimSpecificData';
 import DecisionCard from '@/components/ui/DecisionCard';
 
 interface ColumnBProps {
@@ -11,6 +12,8 @@ interface ColumnBProps {
   setNotes: (value: string) => void;
   onApprove: () => void;
   agents: AgentOutput[];
+  isComplete: boolean;
+  claimData: ClaimSpecificData;
 }
 
 export default function ColumnB({
@@ -21,6 +24,8 @@ export default function ColumnB({
   setNotes,
   onApprove,
   agents,
+  isComplete,
+  claimData,
 }: ColumnBProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
@@ -59,11 +64,11 @@ export default function ColumnB({
           <h3 className="text-sm font-semibold text-gray-900 mb-3">FNOL Summary</h3>
           <div className="prose prose-sm max-w-none text-gray-600">
             <p>
-              <strong>Incident Location:</strong> MG Road intersection, Mumbai<br />
-              <strong>Incident Time:</strong> 15 Oct 2025, 22:50 (Police report) / 23:40 (FNOL filing)<br />
-              <strong>Description:</strong> Single-vehicle collision with barrier. Claimant stated "rear impact" but evidence suggests front-left collision.<br />
-              <strong>Weather:</strong> Clear, dry conditions<br />
-              <strong>Injuries:</strong> None reported
+              <strong>Incident Location:</strong> {claimData.fnolSummary.location}<br />
+              <strong>Incident Time:</strong> {claimData.fnolSummary.incidentTime} / {claimData.fnolSummary.fnolTime}<br />
+              <strong>Description:</strong> {claimData.fnolSummary.description}<br />
+              <strong>Weather:</strong> {claimData.fnolSummary.weather}<br />
+              <strong>Injuries:</strong> {claimData.fnolSummary.injuries}
             </p>
           </div>
         </div>
@@ -206,15 +211,34 @@ export default function ColumnB({
           </div>
         </div>
 
-        {/* Decision Card */}
-        <DecisionCard
-          payout={payout}
-          setPayout={setPayout}
-          notes={notes}
-          setNotes={setNotes}
-          onApprove={onApprove}
-          agents={agents}
-        />
+        {/* Decision Card - Only show when agents complete */}
+        {isComplete ? (
+          <DecisionCard
+            payout={payout}
+            setPayout={setPayout}
+            notes={notes}
+            setNotes={setNotes}
+            onApprove={onApprove}
+            agents={agents}
+            claimData={claimData}
+          />
+        ) : (
+          <div className="bg-white rounded-lg border-2 border-dashed border-gray-300 p-8">
+            <div className="text-center">
+              <Clock className="w-12 h-12 text-gray-400 mx-auto mb-3 animate-pulse" />
+              <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                AI Analysis in Progress
+              </h3>
+              <p className="text-sm text-gray-500">
+                Settlement recommendation will appear once all agents complete their investigation.
+              </p>
+              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-400">
+                <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse" />
+                <span>Analyzing documents, images, and claim details...</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

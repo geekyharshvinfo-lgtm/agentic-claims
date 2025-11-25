@@ -1,5 +1,6 @@
-import { IndianRupee, CheckCircle, AlertTriangle, Share2 } from 'lucide-react';
+import { IndianRupee, CheckCircle, AlertTriangle, Share2, ShieldAlert } from 'lucide-react';
 import { AgentOutput } from '@/types';
+import { ClaimSpecificData } from '@/data/claimSpecificData';
 
 interface DecisionCardProps {
   payout: number;
@@ -8,6 +9,7 @@ interface DecisionCardProps {
   setNotes: (value: string) => void;
   onApprove: () => void;
   agents: AgentOutput[];
+  claimData: ClaimSpecificData;
 }
 
 export default function DecisionCard({
@@ -17,9 +19,57 @@ export default function DecisionCard({
   setNotes,
   onApprove,
   agents,
+  claimData,
 }: DecisionCardProps) {
-  const payoutAgent = agents.find(a => a.type === 'payout');
-  const confidence = payoutAgent?.confidence || 0;
+  const confidence = claimData.confidence;
+  
+  // Determine liability styles based on assessment
+  const getLiabilityStyles = () => {
+    switch (claimData.liability.assessment) {
+      case 'Claimant At-Fault':
+        return {
+          bg: 'bg-amber-50',
+          border: 'border-amber-200',
+          text: 'text-amber-900',
+          textLight: 'text-amber-700',
+          icon: 'text-amber-600',
+        };
+      case 'Third-Party At-Fault':
+        return {
+          bg: 'bg-green-50',
+          border: 'border-green-200',
+          text: 'text-green-900',
+          textLight: 'text-green-700',
+          icon: 'text-green-600',
+        };
+      case 'Shared Fault':
+        return {
+          bg: 'bg-blue-50',
+          border: 'border-blue-200',
+          text: 'text-blue-900',
+          textLight: 'text-blue-700',
+          icon: 'text-blue-600',
+        };
+      case 'No-Fault':
+        return {
+          bg: 'bg-red-50',
+          border: 'border-red-200',
+          text: 'text-red-900',
+          textLight: 'text-red-700',
+          icon: 'text-red-600',
+        };
+      default:
+        return {
+          bg: 'bg-gray-50',
+          border: 'border-gray-200',
+          text: 'text-gray-900',
+          textLight: 'text-gray-700',
+          icon: 'text-gray-600',
+        };
+    }
+  };
+  
+  const styles = getLiabilityStyles();
 
   return (
     <div className="bg-white rounded-lg border-2 border-primary-200 shadow-lg overflow-hidden">
@@ -34,13 +84,19 @@ export default function DecisionCard({
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Liability Assessment
           </label>
-          <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className={`p-4 ${styles.bg} border ${styles.border} rounded-lg`}>
             <div className="flex items-center gap-2 mb-1">
-              <AlertTriangle className="w-5 h-5 text-amber-600" />
-              <span className="font-semibold text-amber-900">Claimant At-Fault</span>
+              {claimData.liability.assessment === 'No-Fault' ? (
+                <ShieldAlert className={`w-5 h-5 ${styles.icon}`} />
+              ) : (
+                <AlertTriangle className={`w-5 h-5 ${styles.icon}`} />
+              )}
+              <span className={`font-semibold ${styles.text}`}>
+                {claimData.liability.assessment}
+              </span>
             </div>
-            <p className="text-sm text-amber-700">
-              Single-vehicle collision. Evidence contradicts claimant statement.
+            <p className={`text-sm ${styles.textLight}`}>
+              {claimData.liability.description}
             </p>
           </div>
         </div>
@@ -60,7 +116,7 @@ export default function DecisionCard({
             />
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            Breakdown: ₹34,500 (repairs) + ₹7,700 (towing, admin)
+            Breakdown: {claimData.payout.breakdown}
           </p>
         </div>
 
