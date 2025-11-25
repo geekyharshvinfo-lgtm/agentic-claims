@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FileText, Clock, AlertCircle, Home } from 'lucide-react';
-import { sampleClaims } from '../data/sampleClaims';
+import { useClaims } from '../contexts/ClaimsContext';
 import { ClaimStatus, SLARisk } from '../types';
 import { cn } from '../utils/cn';
 import BulkActionBar from '../components/bulk/BulkActionBar';
@@ -22,6 +22,7 @@ const slaRiskColors: Record<SLARisk, string> = {
 
 export default function ClaimsInbox() {
   const navigate = useNavigate();
+  const { claims } = useClaims();
   const [selectedClaims, setSelectedClaims] = useState<Set<string>>(new Set());
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [modalConfig, setModalConfig] = useState<{
@@ -36,7 +37,7 @@ export default function ClaimsInbox() {
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedClaims(new Set(sampleClaims.map(c => c.id)));
+      setSelectedClaims(new Set(claims.map(c => c.id)));
     } else {
       setSelectedClaims(new Set());
     }
@@ -77,7 +78,7 @@ export default function ClaimsInbox() {
   };
 
   const handleBulkExport = () => {
-    const selectedData = sampleClaims.filter(c => selectedClaims.has(c.id));
+    const selectedData = claims.filter(c => selectedClaims.has(c.id));
     const csv = [
       ['Claim ID', 'Claimant', 'Vehicle', 'FNOL Date', 'Status', 'SLA Risk'].join(','),
       ...selectedData.map(c => 
@@ -98,8 +99,8 @@ export default function ClaimsInbox() {
     navigate(`/claims/${claimId}`);
   };
 
-  const isAllSelected = selectedClaims.size === sampleClaims.length && sampleClaims.length > 0;
-  const isSomeSelected = selectedClaims.size > 0 && selectedClaims.size < sampleClaims.length;
+  const isAllSelected = selectedClaims.size === claims.length && claims.length > 0;
+  const isSomeSelected = selectedClaims.size > 0 && selectedClaims.size < claims.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -142,7 +143,7 @@ export default function ClaimsInbox() {
           </div>
           {selectedClaims.size > 0 && (
             <div className="text-sm text-gray-600">
-              {selectedClaims.size} of {sampleClaims.length} selected
+              {selectedClaims.size} of {claims.length} selected
             </div>
           )}
         </div>
@@ -187,7 +188,7 @@ export default function ClaimsInbox() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {sampleClaims.map((claim) => (
+                {claims.map((claim) => (
                   <tr
                     key={claim.id}
                     onClick={() => handleRowClick(claim.id)}
@@ -252,24 +253,24 @@ export default function ClaimsInbox() {
         <div className="grid grid-cols-4 gap-4 mt-6">
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <div className="text-sm text-gray-500 mb-1">Total Claims</div>
-            <div className="text-2xl font-bold text-gray-900">{sampleClaims.length}</div>
+            <div className="text-2xl font-bold text-gray-900">{claims.length}</div>
           </div>
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <div className="text-sm text-gray-500 mb-1">Investigating</div>
             <div className="text-2xl font-bold text-yellow-600">
-              {sampleClaims.filter(c => c.status === 'Investigating').length}
+              {claims.filter(c => c.status === 'Investigating').length}
             </div>
           </div>
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <div className="text-sm text-gray-500 mb-1">Ready to Approve</div>
             <div className="text-2xl font-bold text-green-600">
-              {sampleClaims.filter(c => c.status === 'Ready to Approve').length}
+              {claims.filter(c => c.status === 'Ready to Approve').length}
             </div>
           </div>
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <div className="text-sm text-gray-500 mb-1">High SLA Risk</div>
             <div className="text-2xl font-bold text-red-600">
-              {sampleClaims.filter(c => c.slaRisk === 'High').length}
+              {claims.filter(c => c.slaRisk === 'High').length}
             </div>
           </div>
         </div>

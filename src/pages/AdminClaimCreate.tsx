@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FileText, Home, Upload, Save, Plus } from 'lucide-react';
 import { ClaimStatus, SLARisk } from '../types';
+import { useClaims } from '../contexts/ClaimsContext';
 
 interface ClaimFormData {
   claimantName: string;
@@ -25,41 +26,9 @@ const defaultFormData: ClaimFormData = {
   estimatedAmount: '',
 };
 
-const claimTemplates = {
-  'Auto Collision': {
-    claimantName: '',
-    vehicle: '',
-    incidentDate: new Date().toISOString().split('T')[0],
-    incidentLocation: '',
-    description: 'Vehicle collision incident',
-    status: 'New' as ClaimStatus,
-    slaRisk: 'Medium' as SLARisk,
-    estimatedAmount: '',
-  },
-  'Property Damage': {
-    claimantName: '',
-    vehicle: '',
-    incidentDate: new Date().toISOString().split('T')[0],
-    incidentLocation: '',
-    description: 'Property damage claim',
-    status: 'New' as ClaimStatus,
-    slaRisk: 'Low' as SLARisk,
-    estimatedAmount: '',
-  },
-  'Theft': {
-    claimantName: '',
-    vehicle: '',
-    incidentDate: new Date().toISOString().split('T')[0],
-    incidentLocation: '',
-    description: 'Vehicle theft incident',
-    status: 'New' as ClaimStatus,
-    slaRisk: 'High' as SLARisk,
-    estimatedAmount: '',
-  },
-};
-
 export default function AdminClaimCreate() {
   const navigate = useNavigate();
+  const { addClaim } = useClaims();
   const [formData, setFormData] = useState<ClaimFormData>(defaultFormData);
   const [showBulkUpload, setShowBulkUpload] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -74,10 +43,6 @@ export default function AdminClaimCreate() {
     if (e.target.files) {
       setUploadedFiles(prev => [...prev, ...Array.from(e.target.files!)]);
     }
-  };
-
-  const handleTemplateSelect = (template: keyof typeof claimTemplates) => {
-    setFormData(claimTemplates[template]);
   };
 
   const generateClaimId = () => {
@@ -99,6 +64,9 @@ export default function AdminClaimCreate() {
         minute: '2-digit'
       }),
     };
+    
+    // Add the claim to the context
+    addClaim(newClaim);
     
     console.log('Creating new claim:', newClaim);
     console.log('Uploaded files:', uploadedFiles);
@@ -124,8 +92,26 @@ export default function AdminClaimCreate() {
     reader.onload = (e) => {
       try {
         const json = JSON.parse(e.target?.result as string);
+        const claimsArray = Array.isArray(json) ? json : [json];
+        
+        // Add each claim to the context
+        claimsArray.forEach((claimData: ClaimFormData) => {
+          const newClaim = {
+            id: generateClaimId(),
+            ...claimData,
+            fnolDate: new Date().toLocaleString('en-US', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            }),
+          };
+          addClaim(newClaim);
+        });
+        
         console.log('Bulk upload data:', json);
-        alert(`Successfully processed ${Array.isArray(json) ? json.length : 1} claim(s)!`);
+        alert(`Successfully processed ${claimsArray.length} claim(s)!`);
         setShowBulkUpload(false);
         setBulkFile(null);
         navigate('/claims');
@@ -206,24 +192,6 @@ export default function AdminClaimCreate() {
 
       {/* Main Content */}
       <main className="max-w-5xl mx-auto px-6 py-8">
-        {/* Templates */}
-        <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Templates</h2>
-          <div className="grid grid-cols-3 gap-4">
-            {Object.keys(claimTemplates).map((template) => (
-              <button
-                key={template}
-                onClick={() => handleTemplateSelect(template as keyof typeof claimTemplates)}
-                className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-left"
-              >
-                <FileText className="w-6 h-6 text-blue-600 mb-2" />
-                <p className="font-medium text-gray-900">{template}</p>
-                <p className="text-sm text-gray-600 mt-1">Pre-filled template</p>
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Bulk Upload Button */}
         <div className="mb-6">
           <button
