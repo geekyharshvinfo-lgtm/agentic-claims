@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileText } from 'lucide-react';
 import { sampleClaims, sampleDocuments } from '@/data/sampleClaims';
@@ -20,6 +20,12 @@ export default function AdjusterWorkspace() {
   const [showToast, setShowToast] = useState(false);
 
   const { agents, isRunning, isComplete } = useAgentSimulation(true);
+
+  // Update payout when claim changes
+  useEffect(() => {
+    setPayout(claimData.payout.amount);
+    setNotes(''); // Reset notes when switching claims
+  }, [claimId, claimData.payout.amount]);
 
   if (!claim) {
     return <div>Claim not found</div>;
@@ -64,7 +70,7 @@ export default function AdjusterWorkspace() {
       </header>
 
       {/* Main 3-Column Layout */}
-      <main className="flex h-[calc(100vh-73px)]">
+      <main className="flex h-[calc(100vh-73px)]" key={claimId}>
         {/* Column A: Claim Info & Documents */}
         <ColumnA claim={claim} documents={sampleDocuments} />
 
