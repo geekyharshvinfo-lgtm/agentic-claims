@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FileText, Home, Upload, Save, Code, Plus } from 'lucide-react';
+import { FileText, Home, Upload, Save, Plus } from 'lucide-react';
 import { ClaimStatus, SLARisk } from '../types';
 
 interface ClaimFormData {
