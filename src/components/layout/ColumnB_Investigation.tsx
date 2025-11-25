@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { Document, AgentOutput } from '@/types';
 import DecisionCard from '@/components/ui/DecisionCard';
 
@@ -24,16 +24,31 @@ export default function ColumnB({
 }: ColumnBProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
+  const [imageLoading, setImageLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   const imageDocuments = documents.filter(d => d.type === 'image');
   const pdfDocuments = documents.filter(d => d.type === 'pdf');
 
   const nextImage = () => {
+    setImageLoading(true);
+    setImageError(false);
     setCurrentImageIndex((prev) => (prev + 1) % imageDocuments.length);
   };
 
   const prevImage = () => {
+    setImageLoading(true);
+    setImageError(false);
     setCurrentImageIndex((prev) => (prev - 1 + imageDocuments.length) % imageDocuments.length);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
+
+  const handleImageError = () => {
+    setImageLoading(false);
+    setImageError(true);
   };
 
   return (
@@ -60,32 +75,58 @@ export default function ColumnB({
               Vehicle Damage Photos ({currentImageIndex + 1}/{imageDocuments.length})
             </h3>
           </div>
-          <div className="relative bg-gray-100">
+          <div className="relative bg-gray-900">
             {/* Main Image */}
-            <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300 relative">
-              <div className="text-center p-8">
-                <AlertTriangle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-lg font-medium text-gray-600">
-                  {imageDocuments[currentImageIndex]?.name}
-                </p>
-                <p className="text-sm text-gray-500 mt-2">
-                  Damage visualization: Front-left bumper, headlight, and hood
-                </p>
-                {/* Hotspot indicators */}
-                <div className="mt-6 flex justify-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-                    <span className="text-xs text-gray-600">Bumper damage</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-                    <span className="text-xs text-gray-600">Headlight shattered</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse" />
-                    <span className="text-xs text-gray-600">Hood dent</span>
+            <div className="aspect-video relative bg-black">
+              {imageLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+                  <Loader2 className="w-8 h-8 text-primary-500 animate-spin" />
+                </div>
+              )}
+              {imageError ? (
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
+                  <div className="text-center p-8">
+                    <p className="text-lg font-medium text-gray-300">
+                      {imageDocuments[currentImageIndex]?.name}
+                    </p>
+                    <p className="text-sm text-gray-400 mt-2">
+                      Image unavailable
+                    </p>
                   </div>
                 </div>
+              ) : (
+                <img
+                  src={imageDocuments[currentImageIndex]?.url}
+                  alt={imageDocuments[currentImageIndex]?.name}
+                  className="w-full h-full object-contain"
+                  onLoad={handleImageLoad}
+                  onError={handleImageError}
+                />
+              )}
+              
+              {/* Hotspot indicators overlay - only show when image is loaded */}
+              {!imageLoading && !imageError && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-4 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                    <span className="text-xs text-white">Front damage</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                    <span className="text-xs text-white">Impact zone</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" />
+                    <span className="text-xs text-white">Secondary damage</span>
+                  </div>
+                </div>
+              )}
+              
+              {/* Image filename overlay */}
+              <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm px-3 py-1 rounded">
+                <p className="text-xs text-white font-medium">
+                  {imageDocuments[currentImageIndex]?.name}
+                </p>
               </div>
             </div>
 
@@ -111,14 +152,22 @@ export default function ColumnB({
             {imageDocuments.map((doc, idx) => (
               <button
                 key={doc.id}
-                onClick={() => setCurrentImageIndex(idx)}
-                className={`flex-shrink-0 w-20 h-20 rounded border-2 transition-all ${
+                onClick={() => {
+                  setImageLoading(true);
+                  setImageError(false);
+                  setCurrentImageIndex(idx);
+                }}
+                className={`flex-shrink-0 w-20 h-20 rounded border-2 transition-all overflow-hidden ${
                   idx === currentImageIndex
                     ? 'border-primary-500 ring-2 ring-primary-200'
                     : 'border-gray-300 hover:border-gray-400'
-                } bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center`}
+                }`}
               >
-                <span className="text-xs text-gray-600 font-medium">#{idx + 1}</span>
+                <img
+                  src={doc.url}
+                  alt={`Thumbnail ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
               </button>
             ))}
           </div>
