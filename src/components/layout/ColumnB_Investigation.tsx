@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Loader2, Clock } from 'lucide-react';
-import { Document, AgentOutput } from '@/types';
+import { Document } from '@/types';
 import { ClaimSpecificData } from '@/data/claimSpecificData';
 import DecisionCard from '@/components/ui/DecisionCard';
 
@@ -11,7 +11,6 @@ interface ColumnBProps {
   notes: string;
   setNotes: (value: string) => void;
   onApprove: () => void;
-  agents: AgentOutput[];
   isComplete: boolean;
   claimData: ClaimSpecificData;
 }
@@ -23,7 +22,6 @@ export default function ColumnB({
   notes,
   setNotes,
   onApprove,
-  agents,
   isComplete,
   claimData,
 }: ColumnBProps) {

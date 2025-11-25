@@ -82,7 +82,6 @@ export default function AdjusterWorkspace() {
           notes={notes}
           setNotes={setNotes}
           onApprove={handleApprove}
-          agents={agents}
           isComplete={isComplete}
           claimData={claimData}
         />
