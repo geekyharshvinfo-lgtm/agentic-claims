@@ -1,0 +1,117 @@
+import { Claim, Document } from '@/types';
+
+export const sampleClaims: Claim[] = [
+  {
+    id: 'AC-2025-00124',
+    claimantName: 'Rahul Sharma',
+    status: 'Investigating',
+    vehicle: '2018 Honda City (MH01AB1234)',
+    fnolDate: '15 Oct 2025, 23:40',
+    slaRisk: 'Medium',
+  },
+  {
+    id: 'AC-2025-00123',
+    claimantName: 'Priya Patel',
+    status: 'Ready to Approve',
+    vehicle: '2020 Maruti Swift (DL05CD5678)',
+    fnolDate: '14 Oct 2025, 14:20',
+    slaRisk: 'Low',
+  },
+  {
+    id: 'AC-2025-00122',
+    claimantName: 'Amit Kumar',
+    status: 'New',
+    vehicle: '2019 Hyundai Creta (MH12EF9012)',
+    fnolDate: '16 Oct 2025, 08:15',
+    slaRisk: 'High',
+  },
+  {
+    id: 'AC-2025-00121',
+    claimantName: 'Sneha Reddy',
+    status: 'Closed',
+    vehicle: '2021 Tata Nexon (KA03GH3456)',
+    fnolDate: '10 Oct 2025, 16:45',
+    slaRisk: 'Low',
+  },
+  {
+    id: 'AC-2025-00120',
+    claimantName: 'Rajesh Iyer',
+    status: 'Investigating',
+    vehicle: '2017 Ford EcoSport (TN09IJ7890)',
+    fnolDate: '15 Oct 2025, 11:30',
+    slaRisk: 'Medium',
+  },
+];
+
+export const sampleDocuments: Document[] = [
+  {
+    id: 'doc-1',
+    name: 'FNOL_Form.pdf',
+    type: 'pdf',
+    url: '/sample-docs/fnol_form.pdf',
+    uploadedAt: '15 Oct 2025, 23:42',
+  },
+  {
+    id: 'doc-2',
+    name: 'police_report.pdf',
+    type: 'pdf',
+    url: '/sample-docs/police_report.pdf',
+    uploadedAt: '15 Oct 2025, 23:45',
+  },
+  {
+    id: 'doc-3',
+    name: 'repair_estimate.pdf',
+    type: 'pdf',
+    url: '/sample-docs/repair_estimate.pdf',
+    uploadedAt: '15 Oct 2025, 23:47',
+  },
+  {
+    id: 'doc-4',
+    name: 'claimant_statement.txt',
+    type: 'text',
+    url: '/sample-docs/claimant_statement.txt',
+    uploadedAt: '15 Oct 2025, 23:48',
+  },
+  {
+    id: 'img-1',
+    name: 'damage_front_1.jpg',
+    type: 'image',
+    url: '/sample-images/damage_front_1.jpg',
+    uploadedAt: '15 Oct 2025, 23:50',
+  },
+  {
+    id: 'img-2',
+    name: 'damage_front_2.jpg',
+    type: 'image',
+    url: '/sample-images/damage_front_2.jpg',
+    uploadedAt: '15 Oct 2025, 23:51',
+  },
+  {
+    id: 'img-3',
+    name: 'damage_headlight.jpg',
+    type: 'image',
+    url: '/sample-images/damage_headlight.jpg',
+    uploadedAt: '15 Oct 2025, 23:52',
+  },
+  {
+    id: 'img-4',
+    name: 'damage_hood.jpg',
+    type: 'image',
+    url: '/sample-images/damage_hood.jpg',
+    uploadedAt: '15 Oct 2025, 23:53',
+  },
+  {
+    id: 'img-5',
+    name: 'damage_side_view.jpg',
+    type: 'image',
+    url: '/sample-images/damage_side_view.jpg',
+    uploadedAt: '15 Oct 2025, 23:54',
+  },
+  {
+    id: 'img-6',
+    name: 'damage_overview.jpg',
+    type: 'image',
+    url: '/sample-images/damage_overview.jpg',
+    uploadedAt: '15 Oct 2025, 23:55',
+  },
+];
