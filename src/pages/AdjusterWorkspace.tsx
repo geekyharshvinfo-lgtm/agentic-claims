@@ -19,7 +19,7 @@ export default function AdjusterWorkspace() {
   const [notes, setNotes] = useState('');
   const [showToast, setShowToast] = useState(false);
 
-  const { agents, isRunning, isComplete } = useAgentSimulation(true);
+  const { agents, isRunning, isComplete } = useAgentSimulation(true, claimId);
 
   // Update payout when claim changes
   useEffect(() => {
@@ -87,7 +87,7 @@ export default function AdjusterWorkspace() {
         />
 
         {/* Column C: Agentic Activity Panel */}
-        <ColumnC agents={agents} isRunning={isRunning} isComplete={isComplete} />
+        <ColumnC agents={agents} isRunning={isRunning} isComplete={isComplete} claimId={claimId} claimData={claimData} />
       </main>
 
       {/* Toast Notification */}

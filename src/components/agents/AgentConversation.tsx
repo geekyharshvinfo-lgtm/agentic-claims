@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 import { Camera, FileText, Scale, ShieldAlert, IndianRupee } from 'lucide-react';
-import { AgentOutput, AgentType } from '@/types';
-import { agentConversation } from '@/data/agentResponses';
+import { AgentOutput, AgentType, AgentMessage } from '@/types';
 import { cn } from '@/utils/cn';
 
 interface AgentConversationProps {
   agents: AgentOutput[];
+  agentConversation: AgentMessage[];
 }
 
 const agentIcons: Record<AgentType, React.ElementType> = {
@@ -26,7 +26,7 @@ const agentColors: Record<AgentType, string> = {
   payout: 'bg-emerald-500',
 };
 
-export default function AgentConversation({ agents }: AgentConversationProps) {
+export default function AgentConversation({ agents, agentConversation }: AgentConversationProps) {
   // Only show messages for completed agents
   const completedAgentTypes = agents
     .filter(a => a.status === 'completed')

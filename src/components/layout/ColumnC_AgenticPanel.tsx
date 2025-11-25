@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { AgentOutput } from '@/types';
+import { ClaimSpecificData } from '@/data/claimSpecificData';
 import AgentTimeline from '@/components/agents/AgentTimeline';
 import AgentConversation from '@/components/agents/AgentConversation';
 import ExplainabilityPanel from '@/components/agents/ExplainabilityPanel';
@@ -9,9 +10,11 @@ interface ColumnCProps {
   agents: AgentOutput[];
   isRunning: boolean;
   isComplete: boolean;
+  claimId?: string;
+  claimData: ClaimSpecificData;
 }
 
-export default function ColumnC({ agents, isRunning, isComplete }: ColumnCProps) {
+export default function ColumnC({ agents, isRunning, isComplete, claimId, claimData }: ColumnCProps) {
   const [showExplainability, setShowExplainability] = useState(false);
 
   return (
@@ -67,7 +70,7 @@ export default function ColumnC({ agents, isRunning, isComplete }: ColumnCProps)
         {agents.length > 0 && (
           <div>
             <h4 className="text-sm font-semibold text-gray-900 mb-3">Agent Conversation</h4>
-            <AgentConversation agents={agents} />
+            <AgentConversation agents={agents} agentConversation={claimData.agentConversation} />
           </div>
         )}
 
@@ -83,7 +86,7 @@ export default function ColumnC({ agents, isRunning, isComplete }: ColumnCProps)
                   Investigation Complete
                 </h5>
                 <p className="text-xs text-green-700 leading-relaxed">
-                  All 6 agents have completed their analysis. The system recommends approving the claim with a payout of ₹42,200 (confidence: 87%). Review the decision card below to proceed.
+                  All 6 agents have completed their analysis. The system recommends approving the claim with a payout of ₹{claimData.payout.amount.toLocaleString()} (confidence: {Math.round(claimData.confidence * 100)}%). Review the decision card below to proceed.
                 </p>
               </div>
             </div>

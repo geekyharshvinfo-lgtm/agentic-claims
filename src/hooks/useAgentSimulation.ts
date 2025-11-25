@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AgentOutput, AgentType } from '@/types';
-import { agentOutputs } from '@/data/agentResponses';
+import { claimDataMap } from '@/data/claimSpecificData';
 
 // Define agent sequence outside component to prevent re-creation
 const AGENT_SEQUENCE: AgentType[] = [
@@ -12,7 +12,7 @@ const AGENT_SEQUENCE: AgentType[] = [
   'payout',
 ];
 
-export function useAgentSimulation(autoStart: boolean = false) {
+export function useAgentSimulation(autoStart: boolean = false, claimId?: string) {
   const [agents, setAgents] = useState<AgentOutput[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [currentAgentIndex, setCurrentAgentIndex] = useState(-1);
@@ -21,13 +21,17 @@ export function useAgentSimulation(autoStart: boolean = false) {
     setIsRunning(true);
     setCurrentAgentIndex(0);
     
+    // Get claim-specific agent outputs or fall back to default
+    const claimData = claimId ? claimDataMap[claimId] : claimDataMap['AC-2025-00124'];
+    const agentOutputs = claimData?.agentOutputs || [];
+    
     // Initialize all agents as queued
     const queuedAgents = agentOutputs.map(agent => ({
       ...agent,
       status: 'queued' as const,
     }));
     setAgents(queuedAgents);
-  }, []);
+  }, [claimId]);
 
   useEffect(() => {
     if (!isRunning || currentAgentIndex < 0 || currentAgentIndex >= AGENT_SEQUENCE.length) {
@@ -71,16 +75,18 @@ export function useAgentSimulation(autoStart: boolean = false) {
     return () => clearTimeout(timer);
   }, [isRunning, currentAgentIndex]);
 
-  // Auto-start simulation if enabled
+  // Auto-start simulation if enabled or claimId changes
   useEffect(() => {
-    if (autoStart && agents.length === 0) {
+    if (autoStart) {
+      // Reset and restart when claimId changes
+      resetSimulation();
       // Small delay to make it feel more natural
       const timer = setTimeout(() => {
         startSimulation();
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [autoStart, agents.length, startSimulation]);
+  }, [autoStart, claimId, startSimulation]);
 
   const resetSimulation = useCallback(() => {
     setAgents([]);
