@@ -61,9 +61,9 @@ const claimTemplates = {
 export default function AdminClaimCreate() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<ClaimFormData>(defaultFormData);
-  const [showSchema, setShowSchema] = useState(false);
-  const [schemaCode, setSchemaCode] = useState('');
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [bulkFile, setBulkFile] = useState<File | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -107,28 +107,66 @@ export default function AdminClaimCreate() {
     navigate('/claims');
   };
 
-  const handleSchemaImport = () => {
-    try {
-      const schema = JSON.parse(schemaCode);
-      // Apply schema to form
-      if (schema.defaults) {
-        setFormData(prev => ({ ...prev, ...schema.defaults }));
-      }
-      alert('Schema imported successfully!');
-      setShowSchema(false);
-    } catch (error) {
-      alert('Invalid schema format. Please check your JSON.');
+  const handleBulkFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setBulkFile(e.target.files[0]);
     }
   };
 
-  const exampleSchema = {
-    type: 'auto_collision',
-    defaults: {
-      status: 'New',
-      slaRisk: 'Medium',
-    },
-    required_fields: ['claimantName', 'vehicle', 'incidentDate'],
-    optional_fields: ['description', 'estimatedAmount'],
+  const handleBulkUploadSubmit = () => {
+    if (!bulkFile) {
+      alert('Please select a file to upload');
+      return;
+    }
+
+    // Process the JSON file
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const json = JSON.parse(e.target?.result as string);
+        console.log('Bulk upload data:', json);
+        alert(`Successfully processed ${Array.isArray(json) ? json.length : 1} claim(s)!`);
+        setShowBulkUpload(false);
+        setBulkFile(null);
+        navigate('/claims');
+      } catch (error) {
+        alert('Invalid JSON file format. Please check your file.');
+      }
+    };
+    reader.readAsText(bulkFile);
+  };
+
+  const downloadSampleSchema = () => {
+    const sampleSchema = [
+      {
+        claimantName: 'John Doe',
+        vehicle: '2020 Honda Civic (ABC123)',
+        incidentDate: '2024-01-15',
+        incidentLocation: '123 Main St, City',
+        description: 'Vehicle collision at intersection',
+        status: 'New',
+        slaRisk: 'Medium',
+        estimatedAmount: '50000'
+      },
+      {
+        claimantName: 'Jane Smith',
+        vehicle: '2019 Toyota Camry (XYZ789)',
+        incidentDate: '2024-01-16',
+        incidentLocation: '456 Oak Ave, Town',
+        description: 'Rear-end collision',
+        status: 'New',
+        slaRisk: 'High',
+        estimatedAmount: '75000'
+      }
+    ];
+
+    const blob = new Blob([JSON.stringify(sampleSchema, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sample-claims-schema.json';
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -186,48 +224,16 @@ export default function AdminClaimCreate() {
           </div>
         </div>
 
-        {/* Schema Editor Toggle */}
+        {/* Bulk Upload Button */}
         <div className="mb-6">
           <button
-            onClick={() => setShowSchema(!showSchema)}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors"
+            onClick={() => setShowBulkUpload(true)}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors border-2 border-green-500"
           >
-            <Code className="w-4 h-4" />
-            {showSchema ? 'Hide' : 'Show'} Schema Editor
+            <Upload className="w-4 h-4" />
+            Bulk Upload Claims
           </button>
         </div>
-
-        {/* Schema Editor */}
-        {showSchema && (
-          <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Python/JSON Schema</h2>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Import Custom Schema
-              </label>
-              <textarea
-                value={schemaCode}
-                onChange={(e) => setSchemaCode(e.target.value)}
-                placeholder={JSON.stringify(exampleSchema, null, 2)}
-                className="w-full h-64 px-3 py-2 border border-gray-300 rounded-md font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={handleSchemaImport}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
-              >
-                Apply Schema
-              </button>
-              <button
-                onClick={() => setSchemaCode(JSON.stringify(exampleSchema, null, 2))}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors text-sm font-medium"
-              >
-                Load Example
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Claim Form */}
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -421,6 +427,68 @@ export default function AdminClaimCreate() {
             </button>
           </div>
         </form>
+
+        {/* Bulk Upload Modal */}
+        {showBulkUpload && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Bulk Upload Claims</h2>
+              
+              <div className="mb-6">
+                <p className="text-sm text-gray-600 mb-4">
+                  Upload a JSON file containing multiple claims. Each claim should follow the required schema format.
+                </p>
+                
+                <button
+                  onClick={downloadSampleSchema}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium mb-4"
+                >
+                  <FileText className="w-4 h-4" />
+                  Download Sample JSON Schema
+                </button>
+
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-500 transition-colors">
+                  <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-sm text-gray-600 mb-2">
+                    {bulkFile ? bulkFile.name : 'Select a JSON file to upload'}
+                  </p>
+                  <input
+                    type="file"
+                    onChange={handleBulkFileUpload}
+                    className="hidden"
+                    id="bulk-file-upload"
+                    accept=".json"
+                  />
+                  <label
+                    htmlFor="bulk-file-upload"
+                    className="inline-block px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 cursor-pointer transition-colors text-sm font-medium"
+                  >
+                    {bulkFile ? 'Change File' : 'Select File'}
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => {
+                    setShowBulkUpload(false);
+                    setBulkFile(null);
+                  }}
+                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleBulkUploadSubmit}
+                  disabled={!bulkFile}
+                  className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  Upload Claims
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
