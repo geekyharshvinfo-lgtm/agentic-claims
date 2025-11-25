@@ -219,7 +219,6 @@ export default function ColumnB({
             notes={notes}
             setNotes={setNotes}
             onApprove={onApprove}
-            agents={agents}
             claimData={claimData}
           />
         ) : (

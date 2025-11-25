@@ -1,5 +1,4 @@
 import { IndianRupee, CheckCircle, AlertTriangle, Share2, ShieldAlert } from 'lucide-react';
-import { AgentOutput } from '@/types';
 import { ClaimSpecificData } from '@/data/claimSpecificData';
 
 interface DecisionCardProps {
@@ -8,7 +7,6 @@ interface DecisionCardProps {
   notes: string;
   setNotes: (value: string) => void;
   onApprove: () => void;
-  agents: AgentOutput[];
   claimData: ClaimSpecificData;
 }
 
@@ -18,7 +16,6 @@ export default function DecisionCard({
   notes,
   setNotes,
   onApprove,
-  agents,
   claimData,
 }: DecisionCardProps) {
   const confidence = claimData.confidence;
