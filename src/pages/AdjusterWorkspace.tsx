@@ -15,7 +15,7 @@ export default function AdjusterWorkspace() {
   const [showToast, setShowToast] = useState(false);
 
   const claim = sampleClaims.find(c => c.id === claimId);
-  const { agents, isRunning, isComplete, startSimulation } = useAgentSimulation(true);
+  const { agents, isRunning, isComplete } = useAgentSimulation(true);
 
   if (!claim) {
     return <div>Claim not found</div>;
@@ -66,7 +66,6 @@ export default function AdjusterWorkspace() {
 
         {/* Column B: Investigation Workspace */}
         <ColumnB
-          claim={claim}
           documents={sampleDocuments}
           payout={payout}
           setPayout={setPayout}

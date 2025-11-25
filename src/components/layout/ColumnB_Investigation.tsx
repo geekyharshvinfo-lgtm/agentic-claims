@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
-import { Claim, Document, AgentOutput } from '@/types';
+import { Document, AgentOutput } from '@/types';
 import DecisionCard from '@/components/ui/DecisionCard';
 
 interface ColumnBProps {
-  claim: Claim;
   documents: Document[];
   payout: number;
   setPayout: (value: number) => void;
@@ -15,7 +14,6 @@ interface ColumnBProps {
 }
 
 export default function ColumnB({
-  claim,
   documents,
   payout,
   setPayout,
