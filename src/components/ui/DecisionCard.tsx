@@ -49,11 +49,11 @@ export default function DecisionCard({
         };
       case 'No-Fault':
         return {
-          bg: 'bg-red-50',
-          border: 'border-red-200',
-          text: 'text-red-900',
-          textLight: 'text-red-700',
-          icon: 'text-red-600',
+          bg: 'bg-green-50',
+          border: 'border-green-200',
+          text: 'text-green-900',
+          textLight: 'text-green-700',
+          icon: 'text-green-600',
         };
       default:
         return {
@@ -83,8 +83,8 @@ export default function DecisionCard({
           </label>
           <div className={`p-4 ${styles.bg} border ${styles.border} rounded-lg`}>
             <div className="flex items-center gap-2 mb-1">
-              {claimData.liability.assessment === 'No-Fault' ? (
-                <ShieldAlert className={`w-5 h-5 ${styles.icon}`} />
+              {claimData.liability.assessment === 'No-Fault' || claimData.liability.assessment === 'Third-Party At-Fault' ? (
+                <CheckCircle className={`w-5 h-5 ${styles.icon}`} />
               ) : (
                 <AlertTriangle className={`w-5 h-5 ${styles.icon}`} />
               )}
