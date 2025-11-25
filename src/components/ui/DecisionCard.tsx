@@ -1,4 +1,4 @@
-import { IndianRupee, CheckCircle, AlertTriangle, Share2, ShieldAlert } from 'lucide-react';
+import { IndianRupee, CheckCircle, AlertTriangle, Share2 } from 'lucide-react';
 import { ClaimSpecificData } from '@/data/claimSpecificData';
 
 interface DecisionCardProps {
