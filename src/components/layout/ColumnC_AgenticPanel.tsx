@@ -10,11 +10,10 @@ interface ColumnCProps {
   agents: AgentOutput[];
   isRunning: boolean;
   isComplete: boolean;
-  claimId?: string;
   claimData: ClaimSpecificData;
 }
 
-export default function ColumnC({ agents, isRunning, isComplete, claimId, claimData }: ColumnCProps) {
+export default function ColumnC({ agents, isRunning, isComplete, claimData }: ColumnCProps) {
   const [showExplainability, setShowExplainability] = useState(false);
 
   return (

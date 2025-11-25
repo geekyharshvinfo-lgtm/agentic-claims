@@ -87,7 +87,7 @@ export default function AdjusterWorkspace() {
         />
 
         {/* Column C: Agentic Activity Panel */}
-        <ColumnC agents={agents} isRunning={isRunning} isComplete={isComplete} claimId={claimId} claimData={claimData} />
+        <ColumnC agents={agents} isRunning={isRunning} isComplete={isComplete} claimData={claimData} />
       </main>
 
       {/* Toast Notification */}
