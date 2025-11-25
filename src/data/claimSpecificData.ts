@@ -34,8 +34,8 @@ export const claimDataMap: Record<string, ClaimSpecificData> = {
       injuries: 'None reported',
     },
     liability: {
-      assessment: 'Claimant At-Fault',
-      description: 'Single-vehicle collision. Claimant information matches police records.',
+      assessment: 'No-Fault',
+      description: 'Genuine claim verified. Claimant information matches police records. No fraud indicators detected.',
     },
     payout: {
       amount: 42200,
