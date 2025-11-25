@@ -2,19 +2,20 @@ import { useState, useEffect, useCallback } from 'react';
 import { AgentOutput, AgentType } from '@/types';
 import { agentOutputs } from '@/data/agentResponses';
 
+// Define agent sequence outside component to prevent re-creation
+const AGENT_SEQUENCE: AgentType[] = [
+  'document_ingest',
+  'vision',
+  'document_analysis',
+  'liability',
+  'fraud',
+  'payout',
+];
+
 export function useAgentSimulation(autoStart: boolean = false) {
   const [agents, setAgents] = useState<AgentOutput[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [currentAgentIndex, setCurrentAgentIndex] = useState(-1);
-
-  const agentSequence: AgentType[] = [
-    'document_ingest',
-    'vision',
-    'document_analysis',
-    'liability',
-    'fraud',
-    'payout',
-  ];
 
   const startSimulation = useCallback(() => {
     setIsRunning(true);
@@ -29,11 +30,11 @@ export function useAgentSimulation(autoStart: boolean = false) {
   }, []);
 
   useEffect(() => {
-    if (!isRunning || currentAgentIndex < 0 || currentAgentIndex >= agentSequence.length) {
+    if (!isRunning || currentAgentIndex < 0 || currentAgentIndex >= AGENT_SEQUENCE.length) {
       return;
     }
 
-    const currentAgentType = agentSequence[currentAgentIndex];
+    const currentAgentType = AGENT_SEQUENCE[currentAgentIndex];
     
     // Set current agent to running
     setAgents(prev => 
@@ -59,7 +60,7 @@ export function useAgentSimulation(autoStart: boolean = false) {
 
       // Move to next agent after a brief pause
       setTimeout(() => {
-        if (currentAgentIndex < agentSequence.length - 1) {
+        if (currentAgentIndex < AGENT_SEQUENCE.length - 1) {
           setCurrentAgentIndex(prev => prev + 1);
         } else {
           setIsRunning(false);
@@ -68,7 +69,7 @@ export function useAgentSimulation(autoStart: boolean = false) {
     }, processingTime);
 
     return () => clearTimeout(timer);
-  }, [isRunning, currentAgentIndex, agentSequence]);
+  }, [isRunning, currentAgentIndex]);
 
   // Auto-start simulation if enabled
   useEffect(() => {
@@ -92,6 +93,6 @@ export function useAgentSimulation(autoStart: boolean = false) {
     isRunning,
     startSimulation,
     resetSimulation,
-    isComplete: !isRunning && agents.length > 0 && currentAgentIndex >= agentSequence.length - 1,
+    isComplete: !isRunning && agents.length > 0 && currentAgentIndex >= AGENT_SEQUENCE.length - 1,
   };
 }
