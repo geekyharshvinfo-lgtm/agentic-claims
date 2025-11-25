@@ -1,8 +1,11 @@
-import { useNavigate } from 'react-router-dom';
-import { FileText, Clock, AlertCircle } from 'lucide-react';
-import { sampleClaims } from '@/data/sampleClaims';
-import { ClaimStatus, SLARisk } from '@/types';
-import { cn } from '@/utils/cn';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { FileText, Clock, AlertCircle, Home } from 'lucide-react';
+import { sampleClaims } from '../data/sampleClaims';
+import { ClaimStatus, SLARisk, Claim } from '../types';
+import { cn } from '../utils/cn';
+import BulkActionBar from '../components/bulk/BulkActionBar';
+import BulkConfirmModal from '../components/bulk/BulkConfirmModal';
 
 const statusColors: Record<ClaimStatus, string> = {
   'New': 'bg-blue-100 text-blue-800',
@@ -19,6 +22,84 @@ const slaRiskColors: Record<SLARisk, string> = {
 
 export default function ClaimsInbox() {
   const navigate = useNavigate();
+  const [selectedClaims, setSelectedClaims] = useState<Set<string>>(new Set());
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [modalConfig, setModalConfig] = useState<{
+    title: string;
+    message: string;
+    action: () => void;
+  }>({
+    title: '',
+    message: '',
+    action: () => {},
+  });
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedClaims(new Set(sampleClaims.map(c => c.id)));
+    } else {
+      setSelectedClaims(new Set());
+    }
+  };
+
+  const handleSelectClaim = (claimId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newSelected = new Set(selectedClaims);
+    if (newSelected.has(claimId)) {
+      newSelected.delete(claimId);
+    } else {
+      newSelected.add(claimId);
+    }
+    setSelectedClaims(newSelected);
+  };
+
+  const handleBulkApprove = () => {
+    setModalConfig({
+      title: 'Approve Selected Claims',
+      message: 'Are you sure you want to approve these claims? This action cannot be undone.',
+      action: () => {
+        console.log('Approving claims:', Array.from(selectedClaims));
+        alert(`Successfully approved ${selectedClaims.size} claims!`);
+        setSelectedClaims(new Set());
+        setShowConfirmModal(false);
+      },
+    });
+    setShowConfirmModal(true);
+  };
+
+  const handleBulkAssign = () => {
+    const assignee = prompt('Enter assignee name:');
+    if (assignee) {
+      console.log('Assigning claims to:', assignee, Array.from(selectedClaims));
+      alert(`Successfully assigned ${selectedClaims.size} claims to ${assignee}!`);
+      setSelectedClaims(new Set());
+    }
+  };
+
+  const handleBulkExport = () => {
+    const selectedData = sampleClaims.filter(c => selectedClaims.has(c.id));
+    const csv = [
+      ['Claim ID', 'Claimant', 'Vehicle', 'FNOL Date', 'Status', 'SLA Risk'].join(','),
+      ...selectedData.map(c => 
+        [c.id, c.claimantName, c.vehicle, c.fnolDate, c.status, c.slaRisk].join(',')
+      )
+    ].join('\n');
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `claims-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleRowClick = (claimId: string) => {
+    navigate(`/claims/${claimId}`);
+  };
+
+  const isAllSelected = selectedClaims.size === sampleClaims.length && sampleClaims.length > 0;
+  const isSomeSelected = selectedClaims.size > 0 && selectedClaims.size < sampleClaims.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -36,6 +117,13 @@ export default function ClaimsInbox() {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <Link
+                to="/"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <Home className="w-4 h-4" />
+                Dashboard
+              </Link>
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-900">Adjuster Dashboard</p>
                 <p className="text-xs text-gray-500">Last updated: Just now</p>
@@ -47,9 +135,16 @@ export default function ClaimsInbox() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-1">Claims Inbox</h2>
-          <p className="text-sm text-gray-600">Review and process insurance claims</p>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-1">Claims Inbox</h2>
+            <p className="text-sm text-gray-600">Review and process insurance claims</p>
+          </div>
+          {selectedClaims.size > 0 && (
+            <div className="text-sm text-gray-600">
+              {selectedClaims.size} of {sampleClaims.length} selected
+            </div>
+          )}
         </div>
 
         {/* Claims Table */}
@@ -58,6 +153,19 @@ export default function ClaimsInbox() {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
+                  <th className="px-6 py-3 text-left">
+                    <input
+                      type="checkbox"
+                      checked={isAllSelected}
+                      ref={input => {
+                        if (input) {
+                          input.indeterminate = isSomeSelected;
+                        }
+                      }}
+                      onChange={handleSelectAll}
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                  </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Claim ID
                   </th>
@@ -82,9 +190,21 @@ export default function ClaimsInbox() {
                 {sampleClaims.map((claim) => (
                   <tr
                     key={claim.id}
-                    onClick={() => navigate(`/claims/${claim.id}`)}
-                    className="hover:bg-gray-50 cursor-pointer transition-colors"
+                    onClick={() => handleRowClick(claim.id)}
+                    className={cn(
+                      'hover:bg-gray-50 cursor-pointer transition-colors',
+                      selectedClaims.has(claim.id) && 'bg-blue-50'
+                    )}
                   >
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <input
+                        type="checkbox"
+                        checked={selectedClaims.has(claim.id)}
+                        onChange={(e) => handleSelectClaim(claim.id, e as any)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <FileText className="w-4 h-4 text-gray-400" />
@@ -154,6 +274,27 @@ export default function ClaimsInbox() {
           </div>
         </div>
       </main>
+
+      {/* Bulk Action Bar */}
+      <BulkActionBar
+        selectedCount={selectedClaims.size}
+        onApprove={handleBulkApprove}
+        onAssign={handleBulkAssign}
+        onExport={handleBulkExport}
+        onClearSelection={() => setSelectedClaims(new Set())}
+      />
+
+      {/* Confirmation Modal */}
+      <BulkConfirmModal
+        isOpen={showConfirmModal}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        claimCount={selectedClaims.size}
+        confirmLabel="Approve"
+        onConfirm={modalConfig.action}
+        onCancel={() => setShowConfirmModal(false)}
+        type="success"
+      />
     </div>
   );
 }
