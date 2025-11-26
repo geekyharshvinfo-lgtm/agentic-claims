@@ -3,7 +3,6 @@ import { Claim, Document } from '@/types';
 // Generate multiple claims to reach the desired counts
 const generateClaims = (): Claim[] => {
   const claims: Claim[] = [];
-  const statuses: Claim['status'][] = ['New', 'Investigating', 'Ready to Approve', 'Closed'];
   const slaRisks: Claim['slaRisk'][] = ['Low', 'Medium', 'High'];
   
   const names = [
