@@ -105,6 +105,7 @@ export default function AdjusterWorkspace() {
           onApprove={handleApprove}
           isComplete={isComplete}
           claimData={claimData}
+          claim={claim}
         />
 
         {/* Column C: Agentic Activity Panel */}

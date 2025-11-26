@@ -1,5 +1,9 @@
 import { IndianRupee, CheckCircle, AlertTriangle, Share2 } from 'lucide-react';
+import { useState } from 'react';
 import { ClaimSpecificData } from '@/data/claimSpecificData';
+import { Claim } from '@/types';
+import EscalateToSIUModal from './EscalateToSIUModal';
+import RequestMoreInfoModal from './RequestMoreInfoModal';
 
 interface DecisionCardProps {
   payout: number;
@@ -8,6 +12,7 @@ interface DecisionCardProps {
   setNotes: (value: string) => void;
   onApprove: () => void;
   claimData: ClaimSpecificData;
+  claim: Claim;
 }
 
 export default function DecisionCard({
@@ -17,7 +22,11 @@ export default function DecisionCard({
   setNotes,
   onApprove,
   claimData,
+  claim,
 }: DecisionCardProps) {
+  const [showSIUModal, setShowSIUModal] = useState(false);
+  const [showRequestInfoModal, setShowRequestInfoModal] = useState(false);
+  
   const confidence = claimData.confidence;
   
   // Determine liability styles based on assessment
@@ -155,16 +164,35 @@ export default function DecisionCard({
             Approve & Mark Paid
           </button>
           <div className="grid grid-cols-2 gap-3">
-            <button className="px-4 py-2 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all">
+            <button 
+              onClick={() => setShowRequestInfoModal(true)}
+              className="px-4 py-2 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all"
+            >
               Request More Info
             </button>
-            <button className="px-4 py-2 border-2 border-red-300 text-red-700 font-medium rounded-lg hover:bg-red-50 transition-all flex items-center justify-center gap-2">
+            <button 
+              onClick={() => setShowSIUModal(true)}
+              className="px-4 py-2 border-2 border-red-300 text-red-700 font-medium rounded-lg hover:bg-red-50 transition-all flex items-center justify-center gap-2"
+            >
               <Share2 className="w-4 h-4" />
               Escalate to SIU
             </button>
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <EscalateToSIUModal
+        isOpen={showSIUModal}
+        onClose={() => setShowSIUModal(false)}
+        claim={claim}
+      />
+      
+      <RequestMoreInfoModal
+        isOpen={showRequestInfoModal}
+        onClose={() => setShowRequestInfoModal(false)}
+        claim={claim}
+      />
     </div>
   );
 }

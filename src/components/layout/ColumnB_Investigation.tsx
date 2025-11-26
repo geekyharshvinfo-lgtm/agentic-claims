@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Loader2, Clock } from 'lucide-react';
-import { Document } from '@/types';
+import { Document, Claim } from '@/types';
 import { ClaimSpecificData } from '@/data/claimSpecificData';
 import DecisionCard from '@/components/ui/DecisionCard';
 
@@ -13,6 +13,7 @@ interface ColumnBProps {
   onApprove: () => void;
   isComplete: boolean;
   claimData: ClaimSpecificData;
+  claim: Claim;
 }
 
 export default function ColumnB({
@@ -24,6 +25,7 @@ export default function ColumnB({
   onApprove,
   isComplete,
   claimData,
+  claim,
 }: ColumnBProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
@@ -218,6 +220,7 @@ export default function ColumnB({
             setNotes={setNotes}
             onApprove={onApprove}
             claimData={claimData}
+            claim={claim}
           />
         ) : (
           <div className="bg-white rounded-lg border-2 border-dashed border-gray-300 p-8">
