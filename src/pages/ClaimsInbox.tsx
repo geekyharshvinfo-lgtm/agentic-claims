@@ -6,6 +6,7 @@ import { ClaimStatus, SLARisk } from '../types';
 import { cn } from '../utils/cn';
 import BulkActionBar from '../components/bulk/BulkActionBar';
 import BulkConfirmModal from '../components/bulk/BulkConfirmModal';
+import CustomSelect from '../components/ui/CustomSelect';
 
 const statusColors: Record<ClaimStatus, string> = {
   'New': 'bg-blue-100 text-blue-800',
@@ -40,6 +41,29 @@ export default function ClaimsInbox() {
   const [selectedStatus, setSelectedStatus] = useState<ClaimStatus | 'All'>('All');
   const [selectedSLARisk, setSelectedSLARisk] = useState<SLARisk | 'All'>('All');
   const [dateFilter, setDateFilter] = useState<'All' | 'Today' | 'Last 7 Days' | 'Last 30 Days'>('All');
+
+  // Dropdown options
+  const dateFilterOptions = [
+    { value: 'All', label: 'All Dates' },
+    { value: 'Today', label: 'Today' },
+    { value: 'Last 7 Days', label: 'Last 7 Days' },
+    { value: 'Last 30 Days', label: 'Last 30 Days' },
+  ];
+
+  const statusFilterOptions = [
+    { value: 'All', label: 'All Status' },
+    { value: 'New', label: 'New' },
+    { value: 'Investigating', label: 'Investigating' },
+    { value: 'Ready to Approve', label: 'Ready to Approve' },
+    { value: 'Closed', label: 'Closed' },
+  ];
+
+  const slaRiskFilterOptions = [
+    { value: 'All', label: 'All SLA Risk' },
+    { value: 'Low', label: 'Low' },
+    { value: 'Medium', label: 'Medium' },
+    { value: 'High', label: 'High' },
+  ];
 
   // Filtered claims based on search and filters
   const filteredClaims = useMemo(() => {
@@ -211,41 +235,28 @@ export default function ClaimsInbox() {
             </div>
 
             {/* Date Filter Dropdown */}
-            <select
+            <CustomSelect
               value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value as any)}
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-            >
-              <option value="All">All Dates</option>
-              <option value="Today">Today</option>
-              <option value="Last 7 Days">Last 7 Days</option>
-              <option value="Last 30 Days">Last 30 Days</option>
-            </select>
+              onChange={(value) => setDateFilter(value as any)}
+              options={dateFilterOptions}
+              className="min-w-[140px]"
+            />
 
             {/* Status Filter Dropdown */}
-            <select
+            <CustomSelect
               value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value as any)}
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-            >
-              <option value="All">All Status</option>
-              <option value="New">New</option>
-              <option value="Investigating">Investigating</option>
-              <option value="Ready to Approve">Ready to Approve</option>
-              <option value="Closed">Closed</option>
-            </select>
+              onChange={(value) => setSelectedStatus(value as any)}
+              options={statusFilterOptions}
+              className="min-w-[180px]"
+            />
 
             {/* SLA Risk Filter Dropdown */}
-            <select
+            <CustomSelect
               value={selectedSLARisk}
-              onChange={(e) => setSelectedSLARisk(e.target.value as any)}
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-            >
-              <option value="All">All SLA Risk</option>
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select>
+              onChange={(value) => setSelectedSLARisk(value as any)}
+              options={slaRiskFilterOptions}
+              className="min-w-[140px]"
+            />
           </div>
 
           {/* Active Filters Summary */}
