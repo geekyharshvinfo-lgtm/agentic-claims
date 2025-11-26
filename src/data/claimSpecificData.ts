@@ -47,7 +47,80 @@ export const claimDataMap: Record<string, ClaimSpecificData> = {
         type: 'document_ingest',
         status: 'completed',
         summary: 'Parsed 5 files (FNOL form, 6 photos, police_report.pdf, repair_estimate.pdf, claimant_statement.txt). Extracted 14 key facts.',
-        detailedReasoning: 'Successfully ingested all uploaded documents. All claimant information verified and matches police records. No discrepancies found.',
+        detailedReasoning: `📄 DOCUMENT INGESTION ANALYSIS
+
+Files Processed: 5 documents, 6 images
+Total Size: 3.2 MB
+Processing Time: 2.3 seconds
+OCR Confidence: 0.98 average
+
+1. FNOL FORM (PDF - 2 pages)
+   • File size: 847 KB, OCR: 0.98
+   • Fields extracted: 23/23 (100%)
+   • Policy: POL-2025-789 ✓ Active
+   • Claimant: Rahul Sharma, DOB: 15-Jun-1988
+   • Phone: +91-9876543210 ✓ Matches records
+   • Address: 123 MG Road, Mumbai 400001 ✓ Verified
+   • Vehicle: 2018 Honda City, Reg: MH-01-AB-1234
+   • Odometer: 45,230 km (avg 6,461 km/year - normal)
+   • Filing time: 23:40 IST (+50 min from incident)
+
+2. POLICE REPORT (PDF - 3 pages)
+   • File size: 1.2 MB, OCR: 0.96
+   • FIR: FIR-2025-10-15-0892 ✓ Verified
+   • Officer: Constable Pradeep Kumar (Badge #7845)
+   • Incident: 22:50 IST, Oct 15, 2025
+   • Location: 19.0760°N, 72.8777°E (MG Road intersection)
+   • Weather: Clear, 28°C, Dry road
+   • BAC: 0.00% (breathalyzer administered)
+   • Witness: Mr. Anand Kumar (independent, verified)
+   • Quote: "Front-left damage consistent with barrier impact"
+
+3. REPAIR ESTIMATE (PDF - 1 page)
+   • Workshop: Mumbai Auto Care (authorized dealer)
+   • Estimate ID: EST-2025-1847
+   • Inspector: Vijay Patel (ASE certified)
+   • Parts: Bumper ₹12k + Headlight ₹8.5k + Hood ₹9k
+   • Labor: 12 hours @ ₹600/hr
+   • Total: ₹34,500 (within market range)
+
+4. CLAIMANT STATEMENT (TXT)
+   • File: 3.2 KB, dated Oct 15, 23:30
+   • Account: "Misjudged turn, struck barrier front-left"
+   • Consistency score: 0.94 vs police report
+   • No contradictions detected
+
+5. PHOTOS (6 JPG images)
+   • Resolution: 1920x1080 avg
+   • EXIF intact: All 6 photos
+   • Timestamps: 23:08-23:12 (18 min after incident)
+   • GPS: 19.0760°N, 72.8777°E ✓ Matches scene
+   • Camera: iPhone 13 Pro (IMEI verified to claimant)
+
+CROSS-VERIFICATION:
+✓ Name match: 100%
+✓ Vehicle reg match: 100%
+✓ Location GPS: 0.99 (within 1m)
+✓ Timeline logical: 0.96
+✓ No tampering detected: 0.98
+
+EXTRACTED KEY FACTS (14):
+1. Single-vehicle barrier collision
+2. Front-left damage zone
+3. Incident time: 22:50 IST
+4. Location verified via GPS
+5. Independent witness confirms account
+6. No intoxication (BAC 0.00%)
+7. Weather clear, road dry
+8. Immediate police notification
+9. All documents authentic
+10. Claimant history clean (no prior claims)
+11. Policy active and valid
+12. Damage estimate reasonable
+13. No contradictions in statements
+14. Photos geographically verified
+
+Confidence: 0.98 | Status: ✓ VERIFIED`,
         timestamp: '00:00:02',
         confidence: 0.98,
       },
@@ -55,7 +128,146 @@ export const claimDataMap: Record<string, ClaimSpecificData> = {
         type: 'vision',
         status: 'completed',
         summary: 'Detected: front-left bumper damage, left headlight shattered, hood dent. Severity: 6/10. Estimated repair cost: ₹34,500 (range: ₹30k–₹39k).',
-        detailedReasoning: 'Primary impact zone: Front-left at 45-degree angle. Damage consistent with barrier collision as reported.',
+        detailedReasoning: `🔍 VISION AI DAMAGE ASSESSMENT
+
+Images Analyzed: 6 photos
+Total Resolution: 11,520 x 6,480 pixels
+Processing Time: 3.1 seconds
+AI Model: VisionNet v4.2 (Automotive)
+
+PHOTO ANALYSIS:
+Photo #1 - Wide Front View
+• Resolution: 1920x1080, Quality: 9.2/10
+• Lighting: Excellent (street lamps, 850 lux)
+• Damage zones detected: 3 primary, 1 secondary
+• Confidence: 0.96
+
+Photo #2 - Front-Left Close-up
+• Resolution: 1920x1080, Quality: 9.5/10  
+• Bumper deformation: 8-12 cm depth
+• Paint damage area: ~450 cm²
+• Structural integrity: 22% compromised
+
+Photo #3 - Headlight Detail
+• Lens shatter: Complete fragmentation
+• Housing damage: 65% compromised
+• Moisture ingress: High risk
+• Electrical damage: Visible wire exposure
+
+Photo #4 - Hood Damage
+• Dent dimensions: 15cm x 22cm
+• Depth: 4.5cm (shadow analysis)
+• Metal stress: Non-recoverable deformation
+• Replacement vs repair: Replace (cost-effective)
+
+Photo #5 - Side Profile  
+• Impact angle: 42-48° from center
+• Secondary scratches: Left fender
+• Wheel alignment: Visually intact
+• Suspension: No visible damage
+
+Photo #6 - Barrier Paint Transfer
+• Transfer color: Red oxide (Mumbai std barrier)
+• Impact height: 65cm from ground
+• Contact width: ~30cm
+• Barrier material: Concrete (verified)
+
+DAMAGE SEVERITY BY ZONE:
+
+Zone 1: Front-Left Bumper
+• Severity: 8/10 (Severe)
+• Material: ABS Plastic
+• Damage type: Crush + Tear + Paint loss
+• Repair feasibility: 0% (complete replacement)
+• OEM part #: HC-BMP-FL-2018
+• Est. cost: ₹12,000 ±₹1,500
+• Labor: 2.5 hrs @ ₹600/hr = ₹1,500
+
+Zone 2: Left Headlight Assembly
+• Severity: 10/10 (Total failure)
+• Type: Xenon HID projector unit
+• Lens: Shattered beyond repair
+• Housing: Cracked, moisture ingress
+• Wiring: Damaged connector visible
+• OEM part #: HC-HL-L-XEN-2018
+• Est. cost: ₹8,500 ±₹1,000
+• Labor: 1.5 hrs @ ₹600/hr = ₹900
+
+Zone 3: Hood Panel
+• Severity: 6/10 (Moderate-Severe)
+• Material: Steel alloy (1.2mm)
+• Dent area: 330 cm²
+• Paint damage: Down to primer layer
+• Frame stress: Moderate buckling
+• Repair vs Replace: Replace recommended
+• OEM part #: HC-HOOD-2018
+• Est. cost: ₹9,000 ±₹1,200
+• Labor: 2.0 hrs @ ₹600/hr = ₹1,200
+
+Zone 4: Left Fender (Secondary)
+• Severity: 3/10 (Minor)
+• Damage: Surface scratches
+• Length: 18cm scratch line
+• Depth: Clear coat only
+• Repair: Paint correction included in hood work
+
+IMPACT PHYSICS ANALYSIS:
+
+Collision Dynamics:
+• Approach angle: 45° ± 3° (front-left bias)
+• Vehicle speed: 25-35 km/h (est. from deformation)
+• Kinetic energy: 14,800 joules (calculated)
+• Impact duration: 0.18-0.22 sec (typical)
+• Deceleration: ~4.2 g-force
+
+Force Distribution:
+• Bumper absorbed: 70% (~10,360 J)
+• Headlight: 20% (~2,960 J)
+• Hood: 10% (~1,480 J)
+• Total energy dissipated: 100%
+
+Damage Pattern Verification:
+✓ Single impact event: 0.97 confidence
+✓ Barrier collision match: 0.94 confidence
+✓ No secondary impacts: 0.99 confidence
+✓ Damage age: <24 hours (fresh): 0.96
+✓ Paint transfer confirms barrier: 0.92
+
+COST ESTIMATION:
+
+Parts (OEM):
+• Bumper assembly: ₹12,000
+• Headlight unit: ₹8,500
+• Hood panel: ₹9,000
+Subtotal: ₹29,500
+
+Labor (Certified technician):
+• Bumper R&R: 2.5 hrs = ₹1,500
+• Headlight R&R: 1.5 hrs = ₹900
+• Hood R&R: 2.0 hrs = ₹1,200
+• Paint prep: 2.0 hrs = ₹1,000
+• Color match & spray: 3.0 hrs = ₹1,500
+• Final polish: 0.5 hrs = ₹200
+Subtotal: ₹6,300
+
+Materials:
+• Paint (silver metallic): ₹1,200
+• Primer & clear coat: ₹500
+• Clips & fasteners: ₹200
+Subtotal: ₹1,900
+
+Total: ₹37,700
+Market adjustment: -8% = ₹34,500
+Confidence range: ₹30,000 - ₹39,000
+
+QUALITY METRICS:
+• Damage detection: 0.96
+• Severity assessment: 0.92
+• Cost accuracy: 0.89  
+• Pattern matching: 0.94
+• Overall confidence: 0.94
+
+CONCLUSION: Damage authentic, consistent with reported barrier collision. Approve estimate.`,
         timestamp: '00:00:05',
         confidence: 0.94,
       },
@@ -63,7 +275,80 @@ export const claimDataMap: Record<string, ClaimSpecificData> = {
         type: 'document_analysis',
         status: 'completed',
         summary: "Police report indicates collision at 22:50 on 15 Oct 2025; witness: 'car hit from front-left.' Claimant information matches police records perfectly.",
-        detailedReasoning: 'No discrepancies detected. Claimant info verified against police records - all details match. Genuine claim confirmed.',
+        detailedReasoning: `📋 DOCUMENT CROSS-ANALYSIS
+
+TIMELINE VERIFICATION:
+22:50 - Incident occurs (police FIR)
+22:53 - Witness calls police (+3 min)
+22:58 - Claimant calls police (+8 min)
+23:05 - Officer arrives (+15 min)
+23:08 - Photos taken (+18 min) ✓ Logical
+23:12 - Last photo (+22 min)
+23:18 - Vehicle towed (+28 min)
+23:40 - FNOL filed (+50 min) ✓ Expected
+
+Timeline Analysis:
+• All intervals logical and expected
+• No suspicious gaps or overlaps
+• Photo timing consistent with towing prep
+• 50-min FNOL delay = normal (police wait)
+• Confidence: 0.97
+
+STATEMENT CORRELATION:
+Police Officer (Constable Kumar):
+"Vehicle positioned 2.3m from barrier, front-left damage, paint transfer visible, driver cooperative, no intoxication"
+
+Witness (Mr. Anand Kumar):
+"Heard crash, saw Honda City hit barrier front-left, driver alone and shaken but unhurt"
+
+Claimant (Rahul Sharma):
+"Misjudged turn radius, struck barrier with front-left, called police immediately, alone in vehicle"
+
+Consistency Score:
+• Location: 100% match (all say MG Road intersection)
+• Damage zone: 100% match (all say front-left)
+• Time: 97% match (22:50 vs "10:50 PM" - same time)
+• Alone: 100% match
+• No injuries: 100% match
+• Weather: 100% match (clear)
+Overall: 0.99 correlation
+
+DOCUMENT AUTHENTICITY:
+Police Report FIR-2025-10-15-0892:
+✓ Digital signature verified
+✓ Officer badge #7845 - active duty confirmed
+✓ Station stamp authentic
+✓ Paper watermark detected (official forms)
+✓ No alterations or white-out
+✓ Handwriting analysis: consistent throughout
+Authenticity: 0.98
+
+GPS VERIFICATION:
+Reported: 19.0760°N, 72.8777°E
+Photo EXIF: 19.0760°N, 72.8777°E
+Distance: <1 meter ✓ Perfect match
+Verification: 0.999
+
+CLAIMANT BACKGROUND CHECK:
+• Policy holder: 3 years, no prior claims ✓
+• Phone verified: Matches records 100%
+• Address verified: Municipal records confirm
+• Vehicle reg: Matches policy ✓
+• No fraud history: Clean record
+• Credit check: Good standing
+Background confidence: 0.96
+
+RED FLAG ANALYSIS:
+⚠ Checked for: 0 flags found
+✓ No document tampering
+✓ No timeline inconsistencies  
+✓ No contradicting statements
+✓ No suspicious behavioral patterns
+✓ No connection to fraud networks
+✓ No duplicate claims
+
+CONCLUSION: All documents authentic and correlated. Genuine claim verified.
+Confidence: 0.96 | Recommendation: APPROVE`,
         timestamp: '00:00:07',
         confidence: 0.96,
       },
@@ -71,7 +356,107 @@ export const claimDataMap: Record<string, ClaimSpecificData> = {
         type: 'liability',
         status: 'completed',
         summary: 'Evidence supports front-left impact. Claimant information matches police report. Recommended liability: Claimant at-fault. Confidence 0.95.',
-        detailedReasoning: 'Single-vehicle accident with barrier. No third-party involvement. Claimant 100% at-fault. All information verified and genuine.',
+        detailedReasoning: `⚖️ LIABILITY DETERMINATION ANALYSIS
+
+INCIDENT TYPE: Single-vehicle collision with stationary object (road barrier)
+
+APPLICABLE LAW & REGULATIONS:
+• Motor Vehicles Act 1988, Section 3: Driver responsible for vehicle control
+• Maharashtra Motor Vehicle Rules: Duty of care when approaching intersections
+• Case precedent: Single-vehicle accidents = driver 100% liable unless force majeure
+• No force majeure conditions apply (clear weather, dry road, no mechanical failure)
+
+EVIDENCE ASSESSMENT:
+
+1. Physical Evidence (Weight: 0.95)
+   • Barrier damage: Paint transfer confirms contact ✓
+   • Vehicle damage: Front-left pattern matches barrier collision ✓
+   • Impact angle: 45° approach angle (physics analysis) ✓
+   • No third-party debris/marks: Single vehicle confirmed ✓
+   • Quality score: 9.5/10
+
+2. Documentary Evidence (Weight: 0.96)
+   • Police FIR: Single-vehicle incident recorded ✓
+   • Officer statement: "No other vehicles involved" ✓
+   • Breathalyzer: 0.00% BAC (no intoxication) ✓
+   • Weather report: Clear, dry conditions ✓
+   • Quality score: 9.6/10
+
+3. Witness Testimony (Weight: 0.93)
+   • Independent witness: Mr. Anand Kumar ✓
+   • Statement: "Saw Honda City hit barrier" ✓
+   • Credibility: High (no relationship to parties) ✓
+   • Consistency: Matches all other evidence ✓
+   • Quality score: 9.3/10
+
+4. Claimant Statement (Weight: 0.94)
+   • Account: "Misjudged turn radius" ✓
+   • Self-admission of error ✓
+   • No claim of third-party involvement ✓
+   • Honest & cooperative demeanor ✓
+   • Quality score: 9.4/10
+
+FAULT ANALYSIS:
+
+Driver Responsibilities Checklist:
+✗ Maintain safe speed for conditions
+✗ Navigate turn within lane boundaries
+✗ Maintain control of vehicle
+✗ Avoid fixed objects
+✓ Report incident to police
+✓ Provide truthful statement
+
+Violations: 4/6 duties breached
+
+CONTRIBUTORY FACTORS:
+• Driver error: 100% (misjudged turn radius)
+• Road conditions: 0% (dry, well-maintained)
+• Weather: 0% (clear visibility)
+• Vehicle defect: 0% (no mechanical issues)
+• Third-party: 0% (no other vehicles)
+
+LIABILITY CALCULATION:
+
+Claimant Fault Assessment:
+• Primary cause: Driver misjudgment = 100%
+• No mitigating circumstances
+• No shared responsibility possible
+• No third-party contribution
+
+Legal Liability Formula:
+Claimant% = (Driver Error / Total Causation) × 100
+Claimant% = (100% / 100%) × 100 = 100%
+
+POLICY COVERAGE VERIFICATION:
+• Policy type: Comprehensive ✓
+• Single-vehicle coverage: YES ✓
+• Deductible applies: ₹5,000
+• Coverage limit: ₹5,00,000
+• Claim within limits: YES ✓
+
+COMPARATIVE ANALYSIS:
+Alternative scenarios considered:
+1. Barrier positioned unsafely? NO - Standard placement verified
+2. Road design flaw? NO - Intersection meets safety standards
+3. Visibility obstruction? NO - Clear sightlines confirmed
+4. Mechanical failure? NO - No evidence of defects
+
+Each alternative: <5% probability
+
+FINAL DETERMINATION:
+├─ Claimant Liability: 100%
+├─ Third-Party Liability: 0% (none involved)
+├─ Shared Liability: 0% (not applicable)
+└─ Basis: Single-vehicle, driver error, comprehensive evidence
+
+CONFIDENCE BREAKDOWN:
+• Evidence quality: 0.95
+• Legal clarity: 0.97
+• Documentation completeness: 0.96
+• Statement consistency: 0.94
+Overall Confidence: 0.95
+
+RECOMMENDATION: APPROVE claim under comprehensive coverage. Claimant 100% at-fault. Apply standard deductible.`,
         timestamp: '00:00:09',
         confidence: 0.95,
       },
@@ -79,7 +464,121 @@ export const claimDataMap: Record<string, ClaimSpecificData> = {
         type: 'fraud',
         status: 'completed',
         summary: 'Risk score: 0.12. No major fraud indicators detected. Claimant info matches police records. Timeline verified. Genuine claim.',
-        detailedReasoning: 'Low fraud risk. All documentation verified and authentic. Claimant information matches police records perfectly. No red flags detected.',
+        detailedReasoning: `🚨 FRAUD DETECTION ANALYSIS
+
+RISK SCORE: 0.12 / 1.00 (LOW RISK)
+Classification: GENUINE CLAIM
+Recommendation: APPROVE
+
+INDICATOR ANALYSIS (12 factors checked):
+
+1. TIMELINE INTEGRITY ✓ PASS
+   • Incident: 22:50
+   • Police call: 22:58 (+8 min)
+   • Photos: 23:08 (+18 min)
+   • FNOL: 23:40 (+50 min)
+   Risk: 0.05 (Very Low)
+   Rationale: All intervals logical and expected
+
+2. DOCUMENT AUTHENTICITY ✓ PASS
+   • Police report: Verified digital signature
+   • FNOL form: Genuine watermark detected
+   • Photos: EXIF data intact, no tampering
+   • No alterations detected
+   Risk: 0.02 (Negligible)
+
+3. GEOLOCATION VERIFICATION ✓ PASS
+   • Photo GPS: 19.0760°N, 72.8777°E
+   • Police report: Same coordinates
+   • Match accuracy: <1 meter
+   Risk: 0.01 (Negligible)
+
+4. CLAIMANT HISTORY ✓ PASS
+   • Policy age: 3 years
+   • Prior claims: 0
+   • Payment history: Perfect record
+   • No fraud patterns
+   Risk: 0.03 (Very Low)
+
+5. DAMAGE CONSISTENCY ✓ PASS
+   • Damage type: Front-left barrier collision
+   • Physics analysis: Matches 25-35 km/h impact
+   • Paint transfer: Confirms barrier contact
+   • All photos show same fresh damage
+   Risk: 0.04 (Very Low)
+
+6. STATEMENT CORRELATION ✓ PASS
+   • Claimant vs Police: 99% match
+   • Claimant vs Witness: 98% match
+   • No contradictions found
+   Risk: 0.02 (Negligible)
+
+7. REPAIR ESTIMATE VALIDATION ✓ PASS
+   • Workshop: Authorized dealer ✓
+   • Cost: ₹34,500 (market rate verified)
+   • Parts: OEM pricing confirmed
+   • Labor: Standard hourly rates
+   Risk: 0.06 (Very Low)
+
+8. BEHAVIORAL ANALYSIS ✓ PASS
+   • Immediate police notification ✓
+   • Cooperative with officer ✓
+   • Honest admission of fault ✓
+   • No evasive behavior ✓
+   Risk: 0.03 (Very Low)
+
+9. PATTERN MATCHING ✓ PASS
+   • Compared to 47,000 historical claims
+   • No match to known fraud schemes
+   • Claim type: Common genuine pattern
+   • Similarity to fraud cases: 0.08
+   Risk: 0.08 (Very Low)
+
+10. THIRD-PARTY VERIFICATION ✓ PASS
+    • Independent witness present ✓
+    • Witness credibility: High ✓
+    • Officer observation: Confirms account ✓
+    Risk: 0.02 (Negligible)
+
+11. FINANCIAL INDICATORS ✓ PASS
+    • Claim amount: Reasonable (₹42k)
+    • Not inflated or suspicious
+    • Deductible: ₹5k applies
+    • No premium timing issues
+    Risk: 0.05 (Very Low)
+
+12. SOCIAL NETWORK ANALYSIS ✓ PASS
+    • No connection to repair shop ✓
+    • No connection to fraud networks ✓
+    • Claimant background: Clean ✓
+    Risk: 0.01 (Negligible)
+
+RISK CALCULATION:
+Base Risk: 0.50 (neutral starting point)
+
+Risk Reductions:
+- Clean history: -0.15
+- Perfect documentation: -0.12
+- Independent witness: -0.08
+- Timeline logical: -0.06
+- Damage authentic: -0.10
+- Self-admission of fault: -0.05
+- GPS verified: -0.04
+
+Total Reductions: -0.60
+
+Risk Increases:
++0.22 (standard single-vehicle claim baseline)
+
+FINAL RISK = 0.50 - 0.60 + 0.22 = 0.12
+
+CONFIDENCE METRICS:
+• Analysis completeness: 0.98
+• Data quality: 0.97
+• Pattern recognition: 0.95
+• Overall confidence: 0.96
+
+CONCLUSION: Genuine claim. No fraud indicators. Approve with confidence.`,
         timestamp: '00:00:11',
         confidence: 0.96,
       },
@@ -87,7 +586,126 @@ export const claimDataMap: Record<string, ClaimSpecificData> = {
         type: 'payout',
         status: 'completed',
         summary: 'Recommended payout: ₹42,200 (repair ₹34,500 + towing/admin fees). Confidence 0.95. Approved.',
-        detailedReasoning: 'Payout approved. Genuine claim with all information verified. Claimant info matches police records.',
+        detailedReasoning: `💰 PAYOUT CALCULATION & APPROVAL
+
+CLAIM AMOUNT BREAKDOWN:
+
+REPAIR COSTS:
+1. Parts (OEM):
+   • Front bumper assembly: ₹12,000
+   • Left headlight (Xenon HID): ₹8,500
+   • Hood panel: ₹9,000
+   Subtotal: ₹29,500
+
+2. Labor:
+   • Bumper R&R: 2.5 hrs @ ₹600 = ₹1,500
+   • Headlight R&R: 1.5 hrs @ ₹600 = ₹900
+   • Hood R&R: 2.0 hrs @ ₹600 = ₹1,200
+   • Paint prep: 2.0 hrs @ ₹500 = ₹1,000
+   • Spray & finish: 3.0 hrs @ ₹500 = ₹1,500
+   • Detailing: 0.5 hrs @ ₹400 = ₹200
+   Subtotal: ₹6,300
+
+3. Materials:
+   • Paint (silver metallic): ₹1,200
+   • Primer & clear: ₹500
+   • Fasteners: ₹200
+   Subtotal: ₹1,900
+
+4. Shop Supplies & Markup:
+   • Consumables: ₹400
+   • Waste disposal: ₹200
+   • Shop overhead: ₹2,200
+   Subtotal: ₹2,800
+
+REPAIR TOTAL: ₹40,500
+Market Adjustment (-15%): -₹6,000
+ADJUSTED REPAIR: ₹34,500
+
+ADDITIONAL COSTS:
+5. Towing Services:
+   • Tow to storage: ₹1,500
+   • Tow to repair shop: ₹1,000
+   Subtotal: ₹2,500
+
+6. Storage Fees:
+   • 2 days @ ₹600/day: ₹1,200
+
+7. Administrative:
+   • Documentation: ₹800
+   • Inspection fees: ₹500
+   • Processing: ₹700
+   Subtotal: ₹2,000
+
+ADDITIONAL TOTAL: ₹5,700
+Rounded: ₹7,700 (includes contingency)
+
+GROSS CLAIM TOTAL: ₹42,200
+
+POLICY VERIFICATION:
+• Policy: POL-2025-789 ✓ Active
+• Type: Comprehensive ✓ Covers single-vehicle
+• Coverage limit: ₹5,00,000
+• Claim amount: ₹42,200 (8.4% of limit) ✓
+• Deductible: ₹5,000 (applies)
+
+NET PAYOUT CALCULATION:
+Gross amount: ₹42,200
+Less deductible: -₹5,000
+------------------------
+NET TO CLAIMANT: ₹37,200
+
+PAYMENT DETAILS:
+• Method: Direct bank transfer
+• Account: Verified from policy records
+• Processing time: 3-5 business days
+• Tax: TDS applicable if >₹50k threshold (N/A)
+
+APPROVAL CONDITIONS:
+1. ✓ Fraud check cleared (risk 0.12)
+2. ✓ All documentation verified
+3. ✓ Repair at authorized facility required
+4. ✓ Post-repair inspection mandatory
+5. ✓ Original parts/invoices submission required
+
+COMPARATIVE ANALYSIS:
+Similar claims (last 6 months):
+• Average payout: ₹38,500
+• This claim: ₹37,200 (96% of average)
+• Within normal range: ✓
+
+FINANCIAL IMPACT:
+• Reserve allocation: ₹42,200
+• Actual payout: ₹37,200
+• Claimant pays: ₹5,000 (deductible)
+• Loss ratio impact: +0.0084% (minimal)
+
+APPROVAL AUTHORITY:
+• Amount tier: Under ₹50,000
+• Authority level: Senior Adjuster
+• Requires: Single approval ✓
+• SIU review: Not required ✓
+
+PAYMENT SCHEDULE:
+Day 0: Claim approved
+Day 1: Reserve allocated
+Day 2-3: Repair authorization issued
+Day 4-10: Repairs completed
+Day 11: Post-repair inspection
+Day 12: Invoice verification
+Day 13: Payment processed
+Day 14-15: Funds transferred
+
+CONFIDENCE BREAKDOWN:
+• Cost accuracy: 0.89
+• Coverage verification: 0.99
+• Documentation complete: 0.98
+• Approval justified: 0.96
+Overall Confidence: 0.95
+
+STATUS: ✓ APPROVED
+Net payout: ₹37,200
+Claimant responsibility: ₹5,000 deductible`,
         timestamp: '00:00:13',
         confidence: 0.95,
       },
