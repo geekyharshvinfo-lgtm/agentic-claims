@@ -1,62 +1,97 @@
 import { Claim, Document } from '@/types';
 
-export const sampleClaims: Claim[] = [
-  {
-    id: 'AC-2025-00124',
-    claimantName: 'Rahul Sharma',
-    status: 'Investigating',
-    vehicle: '2018 Honda City (MH01AB1234)',
-    fnolDate: '15 Oct 2025, 23:40',
-    slaRisk: 'Medium',
-    estimatedAmount: '45000',
-    approvedAmount: 42000,
-    disbursedAmount: 0,
-  },
-  {
-    id: 'AC-2025-00123',
-    claimantName: 'Priya Patel',
-    status: 'Ready to Approve',
-    vehicle: '2020 Maruti Swift (DL05CD5678)',
-    fnolDate: '14 Oct 2025, 14:20',
-    slaRisk: 'Low',
-    estimatedAmount: '32000',
-    approvedAmount: 32000,
-    disbursedAmount: 0,
-  },
-  {
-    id: 'AC-2025-00122',
-    claimantName: 'Amit Kumar',
-    status: 'New',
-    vehicle: '2019 Hyundai Creta (MH12EF9012)',
-    fnolDate: '16 Oct 2025, 08:15',
-    slaRisk: 'High',
-    estimatedAmount: '78000',
-    approvedAmount: 0,
-    disbursedAmount: 0,
-  },
-  {
-    id: 'AC-2025-00121',
-    claimantName: 'Sneha Reddy',
-    status: 'Closed',
-    vehicle: '2021 Tata Nexon (KA03GH3456)',
-    fnolDate: '10 Oct 2025, 16:45',
-    slaRisk: 'Low',
-    estimatedAmount: '25000',
-    approvedAmount: 25000,
-    disbursedAmount: 25000,
-  },
-  {
-    id: 'AC-2025-00120',
-    claimantName: 'Rajesh Iyer',
-    status: 'Investigating',
-    vehicle: '2017 Ford EcoSport (TN09IJ7890)',
-    fnolDate: '15 Oct 2025, 11:30',
-    slaRisk: 'Medium',
-    estimatedAmount: '56000',
-    approvedAmount: 53000,
-    disbursedAmount: 53000,
-  },
-];
+// Generate multiple claims to reach the desired counts
+const generateClaims = (): Claim[] => {
+  const claims: Claim[] = [];
+  const statuses: Claim['status'][] = ['New', 'Investigating', 'Ready to Approve', 'Closed'];
+  const slaRisks: Claim['slaRisk'][] = ['Low', 'Medium', 'High'];
+  
+  const names = [
+    'Rahul Sharma', 'Priya Patel', 'Amit Kumar', 'Sneha Reddy', 'Rajesh Iyer',
+    'Kavita Singh', 'Arjun Mehta', 'Deepika Nair', 'Vikram Chopra', 'Ananya Desai',
+    'Rohan Gupta', 'Meera Joshi', 'Karthik Rao', 'Divya Krishnan', 'Sanjay Verma',
+    'Pooja Menon', 'Aditya Shah', 'Riya Kapoor', 'Nikhil Pandey', 'Shreya Agarwal'
+  ];
+
+  const vehicles = [
+    '2018 Honda City', '2020 Maruti Swift', '2019 Hyundai Creta', '2021 Tata Nexon',
+    '2017 Ford EcoSport', '2022 Kia Seltos', '2019 Mahindra XUV500', '2020 Toyota Innova',
+    '2018 Volkswagen Polo', '2021 Skoda Rapid', '2019 Renault Duster', '2020 Nissan Kicks',
+    '2017 Honda Jazz', '2022 MG Hector', '2018 Hyundai i20', '2021 Maruti Baleno',
+    '2019 Tata Harrier', '2020 Jeep Compass', '2018 Ford Figo', '2021 Honda WRV'
+  ];
+
+  // Generate 670 claims with specific distribution
+  // 400 New, 150 Investigating, 101 Ready to Approve, 19 Closed
+  // High Priority: 120 claims
+  
+  let claimCounter = 124;
+  
+  // Generate 400 New claims (120 of them high priority)
+  for (let i = 0; i < 400; i++) {
+    claims.push({
+      id: `AC-2025-${String(claimCounter++).padStart(5, '0')}`,
+      claimantName: names[i % names.length],
+      status: 'New',
+      vehicle: `${vehicles[i % vehicles.length]} (MH${String(i % 100).padStart(2, '0')}AB${String(1000 + i).slice(-4)})`,
+      fnolDate: `${15 + (i % 10)} Oct 2025, ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
+      slaRisk: i < 120 ? 'High' : (i % 2 === 0 ? 'Medium' : 'Low'),
+      estimatedAmount: String(25000 + Math.floor(Math.random() * 75000)),
+      approvedAmount: 0,
+      disbursedAmount: 0,
+    });
+  }
+
+  // Generate 150 Investigating claims
+  for (let i = 0; i < 150; i++) {
+    claims.push({
+      id: `AC-2025-${String(claimCounter++).padStart(5, '0')}`,
+      claimantName: names[i % names.length],
+      status: 'Investigating',
+      vehicle: `${vehicles[i % vehicles.length]} (DL${String(i % 100).padStart(2, '0')}CD${String(5000 + i).slice(-4)})`,
+      fnolDate: `${10 + (i % 15)} Oct 2025, ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
+      slaRisk: slaRisks[i % 3],
+      estimatedAmount: String(30000 + Math.floor(Math.random() * 70000)),
+      approvedAmount: Math.floor(Math.random() * 50000),
+      disbursedAmount: 0,
+    });
+  }
+
+  // Generate 101 Ready to Approve claims
+  for (let i = 0; i < 101; i++) {
+    claims.push({
+      id: `AC-2025-${String(claimCounter++).padStart(5, '0')}`,
+      claimantName: names[i % names.length],
+      status: 'Ready to Approve',
+      vehicle: `${vehicles[i % vehicles.length]} (KA${String(i % 100).padStart(2, '0')}EF${String(3000 + i).slice(-4)})`,
+      fnolDate: `${5 + (i % 20)} Oct 2025, ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
+      slaRisk: 'Low',
+      estimatedAmount: String(20000 + Math.floor(Math.random() * 60000)),
+      approvedAmount: 20000 + Math.floor(Math.random() * 60000),
+      disbursedAmount: 0,
+    });
+  }
+
+  // Generate 19 Closed claims
+  for (let i = 0; i < 19; i++) {
+    const amount = 20000 + Math.floor(Math.random() * 50000);
+    claims.push({
+      id: `AC-2025-${String(claimCounter++).padStart(5, '0')}`,
+      claimantName: names[i % names.length],
+      status: 'Closed',
+      vehicle: `${vehicles[i % vehicles.length]} (TN${String(i % 100).padStart(2, '0')}GH${String(7000 + i).slice(-4)})`,
+      fnolDate: `${1 + (i % 25)} Oct 2025, ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
+      slaRisk: 'Low',
+      estimatedAmount: String(amount),
+      approvedAmount: amount,
+      disbursedAmount: amount,
+    });
+  }
+
+  return claims;
+};
+
+export const sampleClaims: Claim[] = generateClaims();
 
 export const sampleDocuments: Document[] = [
   {
