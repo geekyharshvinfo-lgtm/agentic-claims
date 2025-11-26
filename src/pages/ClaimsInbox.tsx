@@ -76,14 +76,6 @@ export default function ClaimsInbox() {
     });
   }, [claims, searchQuery, selectedStatus, selectedSLARisk, dateFilter]);
 
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setSelectedClaims(new Set(claims.map(c => c.id)));
-    } else {
-      setSelectedClaims(new Set());
-    }
-  };
-
   const handleSelectClaim = (claimId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     const newSelected = new Set(selectedClaims);
