@@ -19,6 +19,9 @@ export interface Claim {
   vehicle: string;
   fnolDate: string;
   slaRisk: SLARisk;
+  estimatedAmount?: string;
+  disbursedAmount?: number;
+  approvedAmount?: number;
 }
 
 export interface Document {

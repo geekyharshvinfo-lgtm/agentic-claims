@@ -8,6 +8,9 @@ export const sampleClaims: Claim[] = [
     vehicle: '2018 Honda City (MH01AB1234)',
     fnolDate: '15 Oct 2025, 23:40',
     slaRisk: 'Medium',
+    estimatedAmount: '45000',
+    approvedAmount: 42000,
+    disbursedAmount: 0,
   },
   {
     id: 'AC-2025-00123',
@@ -16,6 +19,9 @@ export const sampleClaims: Claim[] = [
     vehicle: '2020 Maruti Swift (DL05CD5678)',
     fnolDate: '14 Oct 2025, 14:20',
     slaRisk: 'Low',
+    estimatedAmount: '32000',
+    approvedAmount: 32000,
+    disbursedAmount: 0,
   },
   {
     id: 'AC-2025-00122',
@@ -24,6 +30,9 @@ export const sampleClaims: Claim[] = [
     vehicle: '2019 Hyundai Creta (MH12EF9012)',
     fnolDate: '16 Oct 2025, 08:15',
     slaRisk: 'High',
+    estimatedAmount: '78000',
+    approvedAmount: 0,
+    disbursedAmount: 0,
   },
   {
     id: 'AC-2025-00121',
@@ -32,6 +41,9 @@ export const sampleClaims: Claim[] = [
     vehicle: '2021 Tata Nexon (KA03GH3456)',
     fnolDate: '10 Oct 2025, 16:45',
     slaRisk: 'Low',
+    estimatedAmount: '25000',
+    approvedAmount: 25000,
+    disbursedAmount: 25000,
   },
   {
     id: 'AC-2025-00120',
@@ -40,6 +52,9 @@ export const sampleClaims: Claim[] = [
     vehicle: '2017 Ford EcoSport (TN09IJ7890)',
     fnolDate: '15 Oct 2025, 11:30',
     slaRisk: 'Medium',
+    estimatedAmount: '56000',
+    approvedAmount: 53000,
+    disbursedAmount: 53000,
   },
 ];
 
