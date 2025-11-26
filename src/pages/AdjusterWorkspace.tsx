@@ -20,13 +20,25 @@ export default function AdjusterWorkspace() {
   const [showToast, setShowToast] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  const { agents, isRunning, isComplete } = useAgentSimulation(true, claimId);
+  const { agents, isRunning, isComplete } = useAgentSimulation(true, claimId, claim?.status);
 
   // Update payout when claim changes
   useEffect(() => {
     setPayout(claimData.payout.amount);
     setNotes(''); // Reset notes when switching claims
   }, [claimId, claimData.payout.amount]);
+
+  // Auto-update claim status to "Ready to Approve" when agent analysis completes
+  useEffect(() => {
+    if (isComplete && claim && claim.status === 'Investigating') {
+      const claimIndex = sampleClaims.findIndex(c => c.id === claimId);
+      if (claimIndex !== -1) {
+        sampleClaims[claimIndex].status = 'Ready to Approve';
+        // Force a re-render by updating a state (this will trigger the component to re-render)
+        setPayout(prev => prev); // Trigger re-render
+      }
+    }
+  }, [isComplete, claim, claimId]);
 
   if (!claim) {
     return <div>Claim not found</div>;

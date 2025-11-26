@@ -46,7 +46,10 @@ export default function ColumnA({ claim, documents }: ColumnAProps) {
               <span className="text-gray-500">Status</span>
               <span className={cn(
                 'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
-                claim.status === 'Investigating' && 'bg-yellow-100 text-yellow-800'
+                claim.status === 'Investigating' && 'bg-yellow-100 text-yellow-800',
+                claim.status === 'Ready to Approve' && 'bg-green-100 text-green-800',
+                claim.status === 'New' && 'bg-blue-100 text-blue-800',
+                claim.status === 'Closed' && 'bg-gray-100 text-gray-800'
               )}>
                 {claim.status}
               </span>

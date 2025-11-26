@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { AgentOutput, AgentType } from '@/types';
+import { AgentOutput, AgentType, ClaimStatus } from '@/types';
 import { claimDataMap } from '@/data/claimSpecificData';
 
 // Define agent sequence outside component to prevent re-creation
@@ -12,18 +12,31 @@ const AGENT_SEQUENCE: AgentType[] = [
   'payout',
 ];
 
-export function useAgentSimulation(autoStart: boolean = false, claimId?: string) {
+export function useAgentSimulation(autoStart: boolean = false, claimId?: string, claimStatus?: ClaimStatus) {
   const [agents, setAgents] = useState<AgentOutput[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [currentAgentIndex, setCurrentAgentIndex] = useState(-1);
 
   const startSimulation = useCallback(() => {
-    setIsRunning(true);
-    setCurrentAgentIndex(0);
-    
     // Get claim-specific agent outputs or fall back to default
     const claimData = claimId ? claimDataMap[claimId] : claimDataMap['AC-2025-00124'];
     const agentOutputs = claimData?.agentOutputs || [];
+    
+    // If claim is already "Ready to Approve", skip simulation and show completed agents
+    if (claimStatus === 'Ready to Approve') {
+      const completedAgents = agentOutputs.map(agent => ({
+        ...agent,
+        status: 'completed' as const,
+      }));
+      setAgents(completedAgents);
+      setIsRunning(false);
+      setCurrentAgentIndex(AGENT_SEQUENCE.length);
+      return;
+    }
+    
+    // Otherwise, start the simulation
+    setIsRunning(true);
+    setCurrentAgentIndex(0);
     
     // Initialize all agents as queued
     const queuedAgents = agentOutputs.map(agent => ({
@@ -31,7 +44,7 @@ export function useAgentSimulation(autoStart: boolean = false, claimId?: string)
       status: 'queued' as const,
     }));
     setAgents(queuedAgents);
-  }, [claimId]);
+  }, [claimId, claimStatus]);
 
   useEffect(() => {
     if (!isRunning || currentAgentIndex < 0 || currentAgentIndex >= AGENT_SEQUENCE.length) {
@@ -78,15 +91,16 @@ export function useAgentSimulation(autoStart: boolean = false, claimId?: string)
   // Auto-start simulation if enabled or claimId changes
   useEffect(() => {
     if (autoStart) {
-      // Reset and restart when claimId changes
+      // Reset and restart when claimId or status changes
       resetSimulation();
-      // Small delay to make it feel more natural
+      // Small delay to make it feel more natural (skip delay for Ready to Approve)
+      const delay = claimStatus === 'Ready to Approve' ? 0 : 1000;
       const timer = setTimeout(() => {
         startSimulation();
-      }, 1000);
+      }, delay);
       return () => clearTimeout(timer);
     }
-  }, [autoStart, claimId, startSimulation]);
+  }, [autoStart, claimId, claimStatus, startSimulation]);
 
   const resetSimulation = useCallback(() => {
     setAgents([]);
