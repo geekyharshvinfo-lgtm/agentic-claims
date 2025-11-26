@@ -1,6 +1,7 @@
 import { X, MessageSquare, CheckCircle, Upload } from 'lucide-react';
 import { useState } from 'react';
 import { Claim } from '@/types';
+import CustomSelect from './CustomSelect';
 
 interface RequestMoreInfoModalProps {
   isOpen: boolean;
@@ -51,14 +52,14 @@ export default function RequestMoreInfoModal({ isOpen, onClose, claim }: Request
   };
 
   const requestTypes = [
-    'Additional Documents',
-    'Photo Evidence',
-    'Clarification Required',
-    'Witness Information',
-    'Police Report',
-    'Medical Records',
-    'Repair Estimates',
-    'Other',
+    { value: 'additional-documents', label: 'Additional Documents' },
+    { value: 'photo-evidence', label: 'Photo Evidence' },
+    { value: 'clarification', label: 'Clarification Required' },
+    { value: 'witness-info', label: 'Witness Information' },
+    { value: 'police-report', label: 'Police Report' },
+    { value: 'medical-records', label: 'Medical Records' },
+    { value: 'repair-estimates', label: 'Repair Estimates' },
+    { value: 'other', label: 'Other' },
   ];
 
   return (
@@ -116,26 +117,13 @@ export default function RequestMoreInfoModal({ isOpen, onClose, claim }: Request
                 <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Request Type <span className="text-red-600">*</span>
                 </label>
-                <select
+                <CustomSelect
                   value={requestType}
-                  onChange={(e) => setRequestType(e.target.value)}
-                  className="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white text-gray-900 transition-all appearance-none cursor-pointer hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{
-                    backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                    backgroundPosition: 'right 0.5rem center',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: '1.5em 1.5em',
-                    paddingRight: '2.5rem'
-                  }}
+                  onChange={setRequestType}
+                  options={requestTypes}
+                  placeholder="Select request type..."
                   disabled={isSubmitting}
-                >
-                  <option value="" className="text-gray-500">Select request type...</option>
-                  {requestTypes.map((type) => (
-                    <option key={type} value={type} className="text-gray-900 bg-white">
-                      {type}
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
 
               {/* Request Details */}
