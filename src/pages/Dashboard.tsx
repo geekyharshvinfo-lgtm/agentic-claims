@@ -1,12 +1,8 @@
 import { Link } from 'react-router-dom';
 import { 
   FileText, 
-  Search, 
   CheckCircle, 
-  Archive,
   AlertTriangle,
-  TrendingUp,
-  Clock,
   DollarSign,
   Wallet,
   CreditCard
