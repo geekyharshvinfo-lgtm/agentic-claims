@@ -203,171 +203,49 @@ export default function ClaimsInbox() {
             />
           </div>
 
-          {/* Filter Buttons */}
+          {/* Filter Dropdowns */}
           <div className="flex flex-wrap gap-3 items-center">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-500" />
               <span className="text-sm font-medium text-gray-700">Filters:</span>
             </div>
 
-            {/* Date Filter */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setDateFilter('All')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  dateFilter === 'All'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                )}
-              >
-                All Dates
-              </button>
-              <button
-                onClick={() => setDateFilter('Today')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  dateFilter === 'Today'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                )}
-              >
-                Today
-              </button>
-              <button
-                onClick={() => setDateFilter('Last 7 Days')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  dateFilter === 'Last 7 Days'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                )}
-              >
-                Last 7 Days
-              </button>
-              <button
-                onClick={() => setDateFilter('Last 30 Days')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  dateFilter === 'Last 30 Days'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                )}
-              >
-                Last 30 Days
-              </button>
-            </div>
+            {/* Date Filter Dropdown */}
+            <select
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value as any)}
+              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="All">All Dates</option>
+              <option value="Today">Today</option>
+              <option value="Last 7 Days">Last 7 Days</option>
+              <option value="Last 30 Days">Last 30 Days</option>
+            </select>
 
-            <div className="h-6 w-px bg-gray-300"></div>
+            {/* Status Filter Dropdown */}
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value as any)}
+              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="All">All Status</option>
+              <option value="New">New</option>
+              <option value="Investigating">Investigating</option>
+              <option value="Ready to Approve">Ready to Approve</option>
+              <option value="Closed">Closed</option>
+            </select>
 
-            {/* Status Filter */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setSelectedStatus('All')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  selectedStatus === 'All'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                )}
-              >
-                All Status
-              </button>
-              <button
-                onClick={() => setSelectedStatus('New')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  selectedStatus === 'New'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                )}
-              >
-                New
-              </button>
-              <button
-                onClick={() => setSelectedStatus('Investigating')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  selectedStatus === 'Investigating'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                )}
-              >
-                Investigating
-              </button>
-              <button
-                onClick={() => setSelectedStatus('Ready to Approve')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  selectedStatus === 'Ready to Approve'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                )}
-              >
-                Ready to Approve
-              </button>
-              <button
-                onClick={() => setSelectedStatus('Closed')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  selectedStatus === 'Closed'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                )}
-              >
-                Closed
-              </button>
-            </div>
-
-            <div className="h-6 w-px bg-gray-300"></div>
-
-            {/* SLA Risk Filter */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setSelectedSLARisk('All')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  selectedSLARisk === 'All'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                )}
-              >
-                All SLA Risk
-              </button>
-              <button
-                onClick={() => setSelectedSLARisk('Low')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  selectedSLARisk === 'Low'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-white text-green-700 border border-green-300 hover:bg-green-50'
-                )}
-              >
-                Low
-              </button>
-              <button
-                onClick={() => setSelectedSLARisk('Medium')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  selectedSLARisk === 'Medium'
-                    ? 'bg-yellow-600 text-white'
-                    : 'bg-white text-yellow-700 border border-yellow-300 hover:bg-yellow-50'
-                )}
-              >
-                Medium
-              </button>
-              <button
-                onClick={() => setSelectedSLARisk('High')}
-                className={cn(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
-                  selectedSLARisk === 'High'
-                    ? 'bg-red-600 text-white'
-                    : 'bg-white text-red-700 border border-red-300 hover:bg-red-50'
-                )}
-              >
-                High
-              </button>
-            </div>
+            {/* SLA Risk Filter Dropdown */}
+            <select
+              value={selectedSLARisk}
+              onChange={(e) => setSelectedSLARisk(e.target.value as any)}
+              className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="All">All SLA Risk</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
           </div>
 
           {/* Active Filters Summary */}
