@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FileText, Clock, AlertCircle, Home } from 'lucide-react';
+import { FileText, Clock, AlertCircle, Home, Search, Filter } from 'lucide-react';
 import { useClaims } from '../contexts/ClaimsContext';
 import { ClaimStatus, SLARisk } from '../types';
 import { cn } from '../utils/cn';
@@ -34,6 +34,47 @@ export default function ClaimsInbox() {
     message: '',
     action: () => {},
   });
+
+  // Filter states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState<ClaimStatus | 'All'>('All');
+  const [selectedSLARisk, setSelectedSLARisk] = useState<SLARisk | 'All'>('All');
+  const [dateFilter, setDateFilter] = useState<'All' | 'Today' | 'Last 7 Days' | 'Last 30 Days'>('All');
+
+  // Filtered claims based on search and filters
+  const filteredClaims = useMemo(() => {
+    return claims.filter(claim => {
+      // Search filter
+      const matchesSearch = searchQuery === '' || 
+        claim.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        claim.claimantName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        claim.vehicle.toLowerCase().includes(searchQuery.toLowerCase());
+
+      // Status filter
+      const matchesStatus = selectedStatus === 'All' || claim.status === selectedStatus;
+
+      // SLA Risk filter
+      const matchesSLARisk = selectedSLARisk === 'All' || claim.slaRisk === selectedSLARisk;
+
+      // Date filter
+      let matchesDate = true;
+      if (dateFilter !== 'All') {
+        const claimDate = new Date(claim.fnolDate);
+        const today = new Date();
+        const daysDiff = Math.floor((today.getTime() - claimDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (dateFilter === 'Today') {
+          matchesDate = daysDiff === 0;
+        } else if (dateFilter === 'Last 7 Days') {
+          matchesDate = daysDiff <= 7;
+        } else if (dateFilter === 'Last 30 Days') {
+          matchesDate = daysDiff <= 30;
+        }
+      }
+
+      return matchesSearch && matchesStatus && matchesSLARisk && matchesDate;
+    });
+  }, [claims, searchQuery, selectedStatus, selectedSLARisk, dateFilter]);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -99,8 +140,16 @@ export default function ClaimsInbox() {
     navigate(`/claims/${claimId}`);
   };
 
-  const isAllSelected = selectedClaims.size === claims.length && claims.length > 0;
-  const isSomeSelected = selectedClaims.size > 0 && selectedClaims.size < claims.length;
+  const isAllSelected = selectedClaims.size === filteredClaims.length && filteredClaims.length > 0;
+  const isSomeSelected = selectedClaims.size > 0 && selectedClaims.size < filteredClaims.length;
+
+  const handleSelectAllFiltered = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedClaims(new Set(filteredClaims.map(c => c.id)));
+    } else {
+      setSelectedClaims(new Set());
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -143,7 +192,209 @@ export default function ClaimsInbox() {
           </div>
           {selectedClaims.size > 0 && (
             <div className="text-sm text-gray-600">
-              {selectedClaims.size} of {claims.length} selected
+              {selectedClaims.size} of {filteredClaims.length} selected
+            </div>
+          )}
+        </div>
+
+        {/* Search and Filters */}
+        <div className="mb-6 space-y-4">
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search by claim ID, claimant name, or vehicle..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            />
+          </div>
+
+          {/* Filter Buttons */}
+          <div className="flex flex-wrap gap-3 items-center">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-gray-500" />
+              <span className="text-sm font-medium text-gray-700">Filters:</span>
+            </div>
+
+            {/* Date Filter */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setDateFilter('All')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  dateFilter === 'All'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                )}
+              >
+                All Dates
+              </button>
+              <button
+                onClick={() => setDateFilter('Today')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  dateFilter === 'Today'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                )}
+              >
+                Today
+              </button>
+              <button
+                onClick={() => setDateFilter('Last 7 Days')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  dateFilter === 'Last 7 Days'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                )}
+              >
+                Last 7 Days
+              </button>
+              <button
+                onClick={() => setDateFilter('Last 30 Days')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  dateFilter === 'Last 30 Days'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                )}
+              >
+                Last 30 Days
+              </button>
+            </div>
+
+            <div className="h-6 w-px bg-gray-300"></div>
+
+            {/* Status Filter */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setSelectedStatus('All')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  selectedStatus === 'All'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                )}
+              >
+                All Status
+              </button>
+              <button
+                onClick={() => setSelectedStatus('New')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  selectedStatus === 'New'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                )}
+              >
+                New
+              </button>
+              <button
+                onClick={() => setSelectedStatus('Investigating')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  selectedStatus === 'Investigating'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                )}
+              >
+                Investigating
+              </button>
+              <button
+                onClick={() => setSelectedStatus('Ready to Approve')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  selectedStatus === 'Ready to Approve'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                )}
+              >
+                Ready to Approve
+              </button>
+              <button
+                onClick={() => setSelectedStatus('Closed')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  selectedStatus === 'Closed'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                )}
+              >
+                Closed
+              </button>
+            </div>
+
+            <div className="h-6 w-px bg-gray-300"></div>
+
+            {/* SLA Risk Filter */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setSelectedSLARisk('All')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  selectedSLARisk === 'All'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                )}
+              >
+                All SLA Risk
+              </button>
+              <button
+                onClick={() => setSelectedSLARisk('Low')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  selectedSLARisk === 'Low'
+                    ? 'bg-green-600 text-white'
+                    : 'bg-white text-green-700 border border-green-300 hover:bg-green-50'
+                )}
+              >
+                Low
+              </button>
+              <button
+                onClick={() => setSelectedSLARisk('Medium')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  selectedSLARisk === 'Medium'
+                    ? 'bg-yellow-600 text-white'
+                    : 'bg-white text-yellow-700 border border-yellow-300 hover:bg-yellow-50'
+                )}
+              >
+                Medium
+              </button>
+              <button
+                onClick={() => setSelectedSLARisk('High')}
+                className={cn(
+                  'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                  selectedSLARisk === 'High'
+                    ? 'bg-red-600 text-white'
+                    : 'bg-white text-red-700 border border-red-300 hover:bg-red-50'
+                )}
+              >
+                High
+              </button>
+            </div>
+          </div>
+
+          {/* Active Filters Summary */}
+          {(searchQuery || selectedStatus !== 'All' || selectedSLARisk !== 'All' || dateFilter !== 'All') && (
+            <div className="flex items-center gap-3 text-sm">
+              <span className="text-gray-600">
+                Showing {filteredClaims.length} of {claims.length} claims
+              </span>
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedStatus('All');
+                  setSelectedSLARisk('All');
+                  setDateFilter('All');
+                }}
+                className="text-blue-600 hover:text-blue-700 font-medium"
+              >
+                Clear all filters
+              </button>
             </div>
           )}
         </div>
@@ -163,7 +414,7 @@ export default function ClaimsInbox() {
                           input.indeterminate = isSomeSelected;
                         }
                       }}
-                      onChange={handleSelectAll}
+                      onChange={handleSelectAllFiltered}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                   </th>
@@ -188,7 +439,7 @@ export default function ClaimsInbox() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {claims.map((claim) => (
+                {filteredClaims.map((claim) => (
                   <tr
                     key={claim.id}
                     onClick={() => handleRowClick(claim.id)}
