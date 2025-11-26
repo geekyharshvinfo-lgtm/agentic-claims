@@ -130,7 +130,7 @@ export default function Dashboard() {
         {/* Quick Actions */}
         <div className="mt-8 rounded-lg bg-white p-6 shadow-sm border border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2">
             <Link
               to="/claims"
               className="flex items-center gap-3 rounded-lg border-2 border-gray-200 p-4 hover:border-blue-500 hover:bg-blue-50 transition-colors"
@@ -150,17 +150,6 @@ export default function Dashboard() {
               <div>
                 <p className="font-medium text-gray-900">Create New Claim</p>
                 <p className="text-sm text-gray-600">Manually add a claim</p>
-              </div>
-            </Link>
-
-            <Link
-              to="/claims?filter=high-priority"
-              className="flex items-center gap-3 rounded-lg border-2 border-gray-200 p-4 hover:border-red-500 hover:bg-red-50 transition-colors"
-            >
-              <AlertTriangle className="h-6 w-6 text-red-600" />
-              <div>
-                <p className="font-medium text-gray-900">High Priority Claims</p>
-                <p className="text-sm text-gray-600">Review urgent cases</p>
               </div>
             </Link>
           </div>
