@@ -22,8 +22,8 @@ export function useAgentSimulation(autoStart: boolean = false, claimId?: string,
     const claimData = claimId ? claimDataMap[claimId] : claimDataMap['AC-2025-00124'];
     const agentOutputs = claimData?.agentOutputs || [];
     
-    // If claim is already "Ready to Approve", skip simulation and show completed agents
-    if (claimStatus === 'Ready to Approve') {
+    // If claim is already "Ready to Approve" or "Closed", skip simulation and show completed agents
+    if (claimStatus === 'Ready to Approve' || claimStatus === 'Closed') {
       const completedAgents = agentOutputs.map(agent => ({
         ...agent,
         status: 'completed' as const,
@@ -93,8 +93,8 @@ export function useAgentSimulation(autoStart: boolean = false, claimId?: string,
     if (autoStart) {
       // Reset and restart when claimId or status changes
       resetSimulation();
-      // Small delay to make it feel more natural (skip delay for Ready to Approve)
-      const delay = claimStatus === 'Ready to Approve' ? 0 : 1000;
+      // Small delay to make it feel more natural (skip delay for Ready to Approve and Closed)
+      const delay = (claimStatus === 'Ready to Approve' || claimStatus === 'Closed') ? 0 : 1000;
       const timer = setTimeout(() => {
         startSimulation();
       }, delay);
