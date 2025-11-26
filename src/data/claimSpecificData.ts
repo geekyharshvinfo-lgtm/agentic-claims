@@ -744,7 +744,82 @@ Claimant responsibility: ₹5,000 deductible`,
         type: 'document_ingest',
         status: 'completed',
         summary: 'Parsed 7 files (FNOL form, police report, medical records, 4 photos, third-party statement). Extracted 18 key facts.',
-        detailedReasoning: 'Complete documentation set. Third-party driver provided written admission of fault at scene. Medical records confirm whiplash injury consistent with rear impact.',
+        detailedReasoning: `📄 DOCUMENT INGESTION ANALYSIS
+
+Files Processed: 7 documents, 4 images
+Total Size: 4.8 MB
+Processing Time: 2.8 seconds
+OCR Confidence: 0.99 average
+
+1. FNOL FORM (PDF - 2 pages)
+   • Policy: POL-2025-456 ✓ Active
+   • Claimant: Priya Patel, DOB: 22-Mar-1985
+   • Phone: +91-9123456789 ✓ Verified
+   • Vehicle: 2020 Maruti Swift, Reg: DL-3C-AB-5678
+   • Filing: 14:20 IST (+5 min from incident)
+
+2. POLICE REPORT (PDF - 4 pages)
+   • FIR: FIR-2025-10-14-1247 ✓ Verified
+   • Officer: Sub-Inspector Rajesh Gupta
+   • Incident: 14:15 IST, Oct 14, 2025
+   • Location: Nehru Place traffic signal
+   • Third-party: Toyota Innova, DL-8C-XY-9012
+   • Officer note: "Third-party vehicle ran red light"
+
+3. THIRD-PARTY ADMISSION (PDF - 1 page)
+   • Driver: Mr. Suresh Kapoor
+   • Statement: "I admit I ran the red light"
+   • Signature: Verified ✓
+   • Witness: Traffic constable present
+   • Insurance: Active third-party policy
+
+4. MEDICAL RECORDS (PDF - 3 pages)
+   • Hospital: Apollo Hospital, New Delhi
+   • Doctor: Dr. Meera Sharma (Orthopedic)
+   • Diagnosis: Cervical whiplash (Grade II)
+   • Treatment: Neck brace, pain management
+   • Cost: ₹8,000 (verified)
+   • Injury consistent with rear-end impact ✓
+
+5. WITNESS STATEMENTS (PDF - 2 pages)
+   • Witness 1: Mr. Anil Verma (pedestrian)
+   • Witness 2: Ms. Kavita Singh (adjacent vehicle)
+   • Both confirm: Third-party ran red light
+   • Credibility: High (independent)
+
+6. REPAIR ESTIMATE (PDF - 1 page)
+   • Workshop: Maruti Authorized Service
+   • Parts: Rear bumper, tail lights, trunk lid
+   • Labor: 18 hours @ ₹650/hr
+   • Total: ₹72,000
+
+7. PHOTOS (4 JPG images)
+   • All show rear-end damage
+   • EXIF data intact
+   • Timestamps: 14:22-14:25
+   • GPS: Matches incident location
+
+EXTRACTED KEY FACTS (18):
+1. Rear-end collision at traffic signal
+2. Third-party admitted fault in writing
+3. Third-party ran red light
+4. Two independent witnesses confirm
+5. Claimant was stationary at signal
+6. Medical evidence of whiplash
+7. Injury timeline consistent
+8. All documents authentic
+9. Third-party insurance verified
+10. Police report comprehensive
+11. Officer witnessed admission
+12. No contributory negligence
+13. Damage consistent with impact
+14. Repair estimate reasonable
+15. Timeline verified
+16. Location confirmed
+17. Weather clear (no factors)
+18. Fast filing (5 min) - expected
+
+Confidence: 0.99 | Status: ✓ EXCEPTIONAL DOCUMENTATION`,
         timestamp: '00:00:02',
         confidence: 0.99,
       },
