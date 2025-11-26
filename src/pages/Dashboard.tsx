@@ -103,8 +103,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Stats Cards Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+        {/* Stats Cards Grid - Compact Inline Design */}
+        <div className="grid grid-cols-4 gap-4 mb-8">
           <StatsCard
             title="Total Claims"
             value={stats.total}
@@ -118,43 +118,15 @@ export default function Dashboard() {
             color="blue"
           />
           <StatsCard
-            title="Investigating"
-            value={stats.byStatus.Investigating}
-            icon={Search}
-            color="amber"
-          />
-          <StatsCard
-            title="Ready to Approve"
-            value={stats.byStatus['Ready to Approve']}
-            icon={CheckCircle}
-            color="green"
-          />
-        </div>
-
-        {/* Second Row Stats */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-          <StatsCard
-            title="Closed Claims"
-            value={stats.byStatus.Closed}
-            icon={Archive}
-            color="gray"
-          />
-          <StatsCard
             title="High Priority"
             value={stats.highPriority}
             icon={AlertTriangle}
             color="red"
           />
           <StatsCard
-            title="Medium Risk"
-            value={stats.bySlaRisk.Medium}
-            icon={Clock}
-            color="amber"
-          />
-          <StatsCard
-            title="Low Risk"
-            value={stats.bySlaRisk.Low}
-            icon={TrendingUp}
+            title="Ready to Approve"
+            value={stats.byStatus['Ready to Approve']}
+            icon={CheckCircle}
             color="green"
           />
         </div>

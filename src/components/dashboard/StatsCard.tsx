@@ -29,21 +29,21 @@ const iconColorClasses = {
 
 export default function StatsCard({ title, value, icon: Icon, color, trend }: StatsCardProps) {
   return (
-    <div className={`rounded-lg border-2 p-6 ${colorClasses[color]}`}>
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium opacity-80">{title}</p>
-          <p className="mt-2 text-3xl font-bold">{value}</p>
-          {trend && (
-            <p className={`mt-2 text-sm ${trend.isPositive ? 'text-green-600' : 'text-red-600'}`}>
-              {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}% from last week
-            </p>
-          )}
+    <div className={`rounded-lg border-2 p-4 ${colorClasses[color]} flex items-center justify-between gap-4`}>
+      <div className="flex items-center gap-3">
+        <div className={`rounded-lg p-2 ${iconColorClasses[color]} bg-white/50`}>
+          <Icon className="h-5 w-5" />
         </div>
-        <div className={`rounded-full p-3 ${iconColorClasses[color]} bg-white/50`}>
-          <Icon className="h-8 w-8" />
+        <div>
+          <p className="text-xs font-medium opacity-70">{title}</p>
+          <p className="text-2xl font-bold mt-0.5">{value}</p>
         </div>
       </div>
+      {trend && (
+        <p className={`text-xs ${trend.isPositive ? 'text-green-600' : 'text-red-600'}`}>
+          {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
+        </p>
+      )}
     </div>
   );
 }
